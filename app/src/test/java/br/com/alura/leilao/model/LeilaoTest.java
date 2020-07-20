@@ -43,10 +43,11 @@ public class LeilaoTest {
 	public void deve_DevolverMaiorLance_QuandoInseridoUmValor() {
 		LEILAO.propoe(new Lance(USUARIO, 100.0));
 
-		double maiorLanceReal = LEILAO.getMaiorLance();
+		Lance maiorLanceReal = LEILAO.getMaiorLance();
 
-		assertThat(maiorLanceReal, is(closeTo(100.0, DELTA)));
+		assertThat(maiorLanceReal, is(equalTo(new Lance(USUARIO, 100.0))));
 
+//		assertThat(maiorLanceReal, is(closeTo(100.0, DELTA)));
 //		assertEquals(100.0, maiorLanceReal, DELTA);
 	}
 
@@ -55,10 +56,11 @@ public class LeilaoTest {
 		LEILAO.propoe(new Lance(USUARIO, 100.0));
 		LEILAO.propoe(new Lance(new Usuario("u"), 200.0));
 
-		double maiorLanceReal = LEILAO.getMaiorLance();
+		Lance maiorLanceReal = LEILAO.getMaiorLance();
 
-		assertThat(maiorLanceReal, is(closeTo(200.0, DELTA)));
+		assertThat(maiorLanceReal, is(equalTo(new Lance(new Usuario("u"), 200.0))));
 
+//		assertThat(maiorLanceReal, is(closeTo(200.0, DELTA)));
 //		assertEquals(200.0, maiorLanceReal, DELTA);
 	}
 
@@ -66,10 +68,11 @@ public class LeilaoTest {
 	public void deve_DevolverMenorLance_QuandoInseridoUmValor() {
 		LEILAO.propoe(new Lance(USUARIO, 100.0));
 
-		double menorLanceReal = LEILAO.getMenorLance();
+		Lance menorLanceReal = LEILAO.getMenorLance();
 
-		assertThat(menorLanceReal, is(closeTo(100.0, DELTA)));
+		assertThat(menorLanceReal, is(equalTo(new Lance(USUARIO, 100.0))));
 
+//		assertThat(menorLanceReal, is(closeTo(100.0, DELTA)));
 //		assertEquals(100.0, menorLanceReal, DELTA);
 	}
 
@@ -78,10 +81,11 @@ public class LeilaoTest {
 		LEILAO.propoe(new Lance(USUARIO, 100.0));
 		LEILAO.propoe(new Lance(new Usuario("u"), 200.0));
 
-		double maiorLanceReal = LEILAO.getMenorLance();
+		Lance menorLanceReal = LEILAO.getMenorLance();
 
-		assertThat(maiorLanceReal, is(closeTo(100.0, DELTA)));
+		assertThat(menorLanceReal, is(equalTo(new Lance(USUARIO, 100.0))));
 
+//		assertThat(maiorLanceReal, is(closeTo(100.0, DELTA)));
 //		assertEquals(100.0, maiorLanceReal, DELTA);
 	}
 

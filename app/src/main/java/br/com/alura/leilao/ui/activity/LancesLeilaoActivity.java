@@ -24,13 +24,13 @@ public class LancesLeilaoActivity extends AppCompatActivity {
             TextView descricao = findViewById(R.id.lances_leilao_descricao);
             descricao.setText(leilao.getDescricao());
             TextView campoMaiorLance = findViewById(R.id.lances_leilao_maior_lance);
-            campoMaiorLance.setText(String.valueOf(leilao.getMaiorLance()));
+            campoMaiorLance.setText(leilao.getMaiorLanceFormatado());
             TextView campoMenorLance = findViewById(R.id.lances_leilao_menor_lance);
-            campoMenorLance.setText(String.valueOf(leilao.getMenorLance()));
+            campoMenorLance.setText(leilao.getMenorLanceFormatado());
             TextView campoMaioresLances = findViewById(R.id.lances_leilao_maiores_lances);
             StringBuilder stringBuilder = new StringBuilder();
             for(Lance lance : leilao.getTresMaioresLances()) {
-                stringBuilder.append(lance.getValor() + "\n");
+                stringBuilder.append(lance.getValorFormatado() + "\n");
             }
             campoMaioresLances.setText(stringBuilder.toString());
         }

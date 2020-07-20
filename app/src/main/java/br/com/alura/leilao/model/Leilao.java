@@ -1,9 +1,11 @@
 package br.com.alura.leilao.model;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import br.com.alura.leilao.exception.QuantidadeMaximaDeLancesException;
 import br.com.alura.leilao.exception.UsuarioDeuLancesSeguidosException;
@@ -25,8 +27,7 @@ public class Leilao implements Serializable {
 			lances.set(0, lance);
 		} else {
 			valida(lance);
-			lances.add(lance);
-			Collections.sort(lances);
+			lances.add(0, lance);
 		}
 	}
 
@@ -63,26 +64,30 @@ public class Leilao implements Serializable {
 		return descricao;
 	}
 
-	public int getQuantidadeLances() {
-		return lances.size();
-	}
-
 	public List<Lance> getLances() {
 		return lances;
 	}
 
-	public double getMaiorLance() {
+	public Lance getMaiorLance() {
 		if(lances.isEmpty()) {
-			return 0;
+			return null;
 		}
-		return lances.get(0).getValor();
+		return lances.get(0);
 	}
 
-	public double getMenorLance() {
+	public String getMaiorLanceFormatado(){
+		return getMaiorLance().getValorFormatado();
+	}
+
+	public Lance getMenorLance() {
 		if(lances.isEmpty()) {
-			return 0;
+			return null;
 		}
-		return lances.get(lances.size() - 1).getValor();
+		return lances.get(lances.size() - 1);
+	}
+
+	public String getMenorLanceFormatado(){
+		return getMenorLance().getValorFormatado();
 	}
 
 	public List<Lance> getTresMaioresLances() {

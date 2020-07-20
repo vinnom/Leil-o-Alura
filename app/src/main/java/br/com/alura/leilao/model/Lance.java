@@ -3,19 +3,28 @@ package br.com.alura.leilao.model;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class Lance implements Serializable, Comparable {
 
+	private static final Locale BRASIL = new Locale("pt", "BR");
 	private final Usuario usuario;
 	private final double valor;
+	private final String valorFormatado;
 
 	public Lance(Usuario usuario, double valor) {
 		this.usuario = usuario;
 		this.valor = valor;
+		this.valorFormatado = formata(valor);
 	}
 
 	public double getValor() {
 		return valor;
+	}
+
+	public String getValorFormatado() {
+		return valorFormatado;
 	}
 
 	@Override
@@ -53,5 +62,10 @@ public class Lance implements Serializable, Comparable {
 
 		if(Double.compare(lance.valor, valor) != 0) return false;
 		return usuario.equals(lance.usuario);
+	}
+
+	public String formata(double valor) {
+		NumberFormat formatador = NumberFormat.getCurrencyInstance(Lance.BRASIL);
+		return formatador.format(valor);
 	}
 }
