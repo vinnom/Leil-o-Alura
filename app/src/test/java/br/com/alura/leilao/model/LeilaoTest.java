@@ -1,14 +1,18 @@
 package br.com.alura.leilao.model;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
-
-import java.util.List;
 
 import br.com.alura.leilao.exception.QuantidadeMaximaDeLancesException;
 import br.com.alura.leilao.exception.UsuarioDeuLancesSeguidosException;
 import br.com.alura.leilao.exception.ValorMenorQueOAnteriorException;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.both;
+import static org.hamcrest.Matchers.closeTo;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 public class LeilaoTest {
 
@@ -20,15 +24,19 @@ public class LeilaoTest {
 	public void deve_ConterDescricao() {
 		String descricaoReal = LEILAO.getDescricao();
 
-		assertEquals("teste", descricaoReal);
+		assertThat(descricaoReal, is(equalTo("teste")));
+
+//		assertEquals("teste", descricaoReal);
 	}
 
 	@Test
 	public void deve_ConterLanceProposto() {
 		LEILAO.propoe(new Lance(USUARIO, 100.0));
 
-		assertEquals(1, LEILAO.getQuantidadeLances());
-		assertEquals(100.0, LEILAO.getLances().get(0).getValor(), DELTA);
+		assertThat(LEILAO.getLances(), both(Matchers.<Lance> hasSize(1)).and(contains(new Lance(USUARIO, 100.0))));
+
+//		assertEquals(1, LEILAO.getQuantidadeLances());
+//		assertEquals(100.0, LEILAO.getLances().get(0).getValor(), DELTA);
 	}
 
 	@Test
@@ -37,7 +45,9 @@ public class LeilaoTest {
 
 		double maiorLanceReal = LEILAO.getMaiorLance();
 
-		assertEquals(100.0, maiorLanceReal, DELTA);
+		assertThat(maiorLanceReal, is(closeTo(100.0, DELTA)));
+
+//		assertEquals(100.0, maiorLanceReal, DELTA);
 	}
 
 	@Test
@@ -47,7 +57,9 @@ public class LeilaoTest {
 
 		double maiorLanceReal = LEILAO.getMaiorLance();
 
-		assertEquals(200.0, maiorLanceReal, DELTA);
+		assertThat(maiorLanceReal, is(closeTo(200.0, DELTA)));
+
+//		assertEquals(200.0, maiorLanceReal, DELTA);
 	}
 
 	@Test
@@ -56,7 +68,9 @@ public class LeilaoTest {
 
 		double menorLanceReal = LEILAO.getMenorLance();
 
-		assertEquals(100.0, menorLanceReal, DELTA);
+		assertThat(menorLanceReal, is(closeTo(100.0, DELTA)));
+
+//		assertEquals(100.0, menorLanceReal, DELTA);
 	}
 
 	@Test
@@ -66,7 +80,9 @@ public class LeilaoTest {
 
 		double maiorLanceReal = LEILAO.getMenorLance();
 
-		assertEquals(100.0, maiorLanceReal, DELTA);
+		assertThat(maiorLanceReal, is(closeTo(100.0, DELTA)));
+
+//		assertEquals(100.0, maiorLanceReal, DELTA);
 	}
 
 	@Test
@@ -74,11 +90,19 @@ public class LeilaoTest {
 		LEILAO.propoe(new Lance(USUARIO, 100.0));
 		LEILAO.propoe(new Lance(new Usuario("u"), 200.0));
 
-		List<Lance> tresMaioresLances = LEILAO.getTresMaioresLances();
+		assertThat(LEILAO.getTresMaioresLances(), both(
+			Matchers.<Lance> hasSize(2)).and(
+			contains(
+				new Lance(new Usuario("u"), 200.0),
+				new Lance(USUARIO, 100.0)
+			)
+			)
+		);
 
-		assertEquals(2, tresMaioresLances.size());
-		assertEquals(200.0, tresMaioresLances.get(0).getValor(), DELTA);
-		assertEquals(100.0, tresMaioresLances.get(1).getValor(), DELTA);
+//		List<Lance> tresMaioresLances = LEILAO.getTresMaioresLances();
+//		assertEquals(2, tresMaioresLances.size());
+//		assertEquals(200.0, tresMaioresLances.get(0).getValor(), DELTA);
+//		assertEquals(100.0, tresMaioresLances.get(1).getValor(), DELTA);
 	}
 
 	@Test
@@ -87,12 +111,21 @@ public class LeilaoTest {
 		LEILAO.propoe(new Lance(new Usuario("u"), 200.0));
 		LEILAO.propoe(new Lance(USUARIO, 300.0));
 
-		List<Lance> tresMaioresLances = LEILAO.getTresMaioresLances();
+		assertThat(LEILAO.getTresMaioresLances(), both(
+			Matchers.<Lance> hasSize(3)).and(
+			contains(
+				new Lance(USUARIO, 300.0),
+				new Lance(new Usuario("u"), 200.0),
+				new Lance(USUARIO, 100.0)
+			)
+		));
 
-		assertEquals(3, tresMaioresLances.size());
-		assertEquals(300.0, tresMaioresLances.get(0).getValor(), DELTA);
-		assertEquals(200.0, tresMaioresLances.get(1).getValor(), DELTA);
-		assertEquals(100.0, tresMaioresLances.get(2).getValor(), DELTA);
+
+//		List<Lance> tresMaioresLances = LEILAO.getTresMaioresLances();
+//		assertEquals(3, tresMaioresLances.size());
+//		assertEquals(300.0, tresMaioresLances.get(0).getValor(), DELTA);
+//		assertEquals(200.0, tresMaioresLances.get(1).getValor(), DELTA);
+//		assertEquals(100.0, tresMaioresLances.get(2).getValor(), DELTA);
 	}
 
 	@Test
@@ -103,18 +136,33 @@ public class LeilaoTest {
 		LEILAO.propoe(new Lance(USUARIO, 300.0));
 		LEILAO.propoe(new Lance(U, 400.0));
 
-		List<Lance> tresMaioresLances = LEILAO.getTresMaioresLances();
+		assertThat(LEILAO.getTresMaioresLances(), both(
+			Matchers.<Lance> hasSize(3)).and(
+			contains(
+				new Lance(U, 400.0),
+				new Lance(USUARIO, 300.0),
+				new Lance(U, 200.0)
+			)
+		));
 
-		assertEquals(3, tresMaioresLances.size());
-		assertEquals(400.0, tresMaioresLances.get(0).getValor(), DELTA);
-		assertEquals(300.0, tresMaioresLances.get(1).getValor(), DELTA);
-		assertEquals(200.0, tresMaioresLances.get(2).getValor(), DELTA);
+//		List<Lance> tresMaioresLances = LEILAO.getTresMaioresLances();
+//		assertEquals(3, tresMaioresLances.size());
+//		assertEquals(400.0, tresMaioresLances.get(0).getValor(), DELTA);
+//		assertEquals(300.0, tresMaioresLances.get(1).getValor(), DELTA);
+//		assertEquals(200.0, tresMaioresLances.get(2).getValor(), DELTA);
 	}
 
 	@Test
 	public void deve_ConterLanceInicializadoComZero() {
-		assertEquals(1, LEILAO.getLances().size());
-		assertEquals(0.0, LEILAO.getLances().get(0).getValor(), DELTA);
+		assertThat(LEILAO.getLances(), both(
+			Matchers.<Lance> hasSize(1)).and(
+			contains(
+				new Lance(new Usuario(""), 0.0)
+			)
+		));
+
+//		assertEquals(1, LEILAO.getLances().size());
+//		assertEquals(0.0, LEILAO.getLances().get(0).getValor(), DELTA);
 	}
 
 	@Test(expected = ValorMenorQueOAnteriorException.class)
