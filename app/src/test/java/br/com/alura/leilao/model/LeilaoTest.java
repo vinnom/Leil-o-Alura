@@ -8,7 +8,6 @@ import br.com.alura.leilao.exception.UsuarioDeuLancesSeguidosException;
 import br.com.alura.leilao.exception.ValorMenorQueOAnteriorException;
 
 import static org.hamcrest.Matchers.both;
-import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;

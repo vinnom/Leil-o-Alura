@@ -17,35 +17,35 @@ import br.com.alura.leilao.ui.recyclerview.adapter.ListaLeilaoAdapter;
 
 public class ListaLeilaoActivity extends AppCompatActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lista_leilao);
-        ListaLeilaoAdapter adapter = new ListaLeilaoAdapter(this, leiloesDeExemplo());
-        RecyclerView recyclerView = findViewById(R.id.lista_leilao_recyclerview);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new ListaLeilaoAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Leilao leilao) {
-                Intent vaiParaLancesLeilao = new Intent(ListaLeilaoActivity.this, LancesLeilaoActivity.class);
-                vaiParaLancesLeilao.putExtra("leilao", leilao);
-                startActivity(vaiParaLancesLeilao);
-            }
-        });
-    }
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_lista_leilao);
+		ListaLeilaoAdapter adapter = new ListaLeilaoAdapter(this, leiloesDeExemplo());
+		RecyclerView recyclerView = findViewById(R.id.lista_leilao_recyclerview);
+		recyclerView.setAdapter(adapter);
+		adapter.setOnItemClickListener(new ListaLeilaoAdapter.OnItemClickListener() {
+			@Override
+			public void onItemClick(Leilao leilao) {
+				Intent vaiParaLancesLeilao = new Intent(ListaLeilaoActivity.this, LancesLeilaoActivity.class);
+				vaiParaLancesLeilao.putExtra("leilao", leilao);
+				startActivity(vaiParaLancesLeilao);
+			}
+		});
+	}
 
-    private List<Leilao> leiloesDeExemplo() {
-        Leilao console = new Leilao("Console");
-        console.propoe(new Lance(new Usuario("usuario1"), 250.0));
-        console.propoe(new Lance(new Usuario("usuario2"), 500.0));
+	private List<Leilao> leiloesDeExemplo() {
+		Leilao console = new Leilao("Console");
+		console.propoe(new Lance(new Usuario("usuario1"), 250.0));
+		console.propoe(new Lance(new Usuario("usuario2"), 500.0));
 
-        Leilao controle = new Leilao("Controle");
-        controle.propoe(new Lance(new Usuario("usuario1"), 150.0));
-        controle.propoe(new Lance(new Usuario("usuario2"), 300.0));
-        controle.propoe(new Lance(new Usuario("usuario1"), 400.0));
-        return new ArrayList<>(Arrays.asList(
-                console, controle
-        ));
-    }
+		Leilao controle = new Leilao("Controle");
+		controle.propoe(new Lance(new Usuario("usuario1"), 150.0));
+		controle.propoe(new Lance(new Usuario("usuario2"), 300.0));
+		controle.propoe(new Lance(new Usuario("usuario1"), 400.0));
+		return new ArrayList<>(Arrays.asList(
+			console, controle
+		));
+	}
 
 }
