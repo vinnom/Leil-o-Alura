@@ -3,18 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.activity.ListaLeilaoActivity">
+    android:layout_height="80dp">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/lista_leilao_recyclerview"
+    <TextView
+        android:id="@+id/item_usuario_id_com_nome"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_marginBottom="8dp"
+        android:textSize="28sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/item_leilao" />
+        tools:text="1 - Alex Felipe" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

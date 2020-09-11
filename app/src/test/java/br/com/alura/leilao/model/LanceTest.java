@@ -11,12 +11,12 @@ import static org.junit.Assert.assertThat;
 
 public class LanceTest {
 
-	@Test
-	public void deve_RetornarValorFormatadoEmPTBR() {
-		Lance lance = new Lance(new Usuario("usuario"), 100.0);
-		NumberFormat formatador = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
-		String valorEsperado = formatador.format(100.0);
+   @Test
+   public void deve_RetornarValorFormatadoEmPTBR() {
+      Lance lance = new Lance(new Usuario("usuario"), 100.0);
+      NumberFormat formatador = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+      String valorEsperado = formatador.format(100.0);
 
-		assertThat(lance.formata(100.0), is(equalTo(valorEsperado)));
-	}
+      assertThat(lance.formata(100.0), is(equalTo(valorEsperado)));
+   }
 }
