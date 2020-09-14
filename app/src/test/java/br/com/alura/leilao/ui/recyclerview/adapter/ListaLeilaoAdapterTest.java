@@ -5,7 +5,6 @@ import android.content.Context;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -16,6 +15,7 @@ import br.com.alura.leilao.model.Leilao;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.doNothing;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ListaLeilaoAdapterTest {
@@ -27,7 +27,7 @@ public class ListaLeilaoAdapterTest {
 
    @Test
    public void deve_AtualizarLista_QuandoRecebeNovosLeiloes() {
-      Mockito.doNothing().when(adapter).notificaMudancaNoConjuntoDeDados();
+      doNothing().when(adapter).notificaMudancaNoConjuntoDeDados();
 
       adapter.atualiza(Arrays.asList(
          new Leilao("A"),

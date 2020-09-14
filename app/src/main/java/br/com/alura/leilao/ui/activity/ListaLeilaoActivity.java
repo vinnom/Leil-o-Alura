@@ -67,6 +67,10 @@ public class ListaLeilaoActivity extends AppCompatActivity {
    @Override
    protected void onResume() {
       super.onResume();
+      buscaLeiloesNaAPIWeb(adapter, client);
+   }
+
+   public void buscaLeiloesNaAPIWeb(final ListaLeilaoAdapter adapter, LeilaoWebClient client) {
       client.todos(new RespostaListener<List<Leilao>>() {
          @Override
          public void sucesso(List<Leilao> leiloes) {
