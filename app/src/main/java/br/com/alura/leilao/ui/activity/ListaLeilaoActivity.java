@@ -9,18 +9,16 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
-
 import br.com.alura.leilao.R;
 import br.com.alura.leilao.api.retrofit.client.LeilaoWebClient;
-import br.com.alura.leilao.api.retrofit.client.RespostaListener;
 import br.com.alura.leilao.model.Leilao;
+import br.com.alura.leilao.ui.AtualizadorDeLeilao;
 import br.com.alura.leilao.ui.recyclerview.adapter.ListaLeilaoAdapter;
 
 import static br.com.alura.leilao.ui.activity.LeilaoConstantes.CHAVE_LEILAO;
 
 
-public class ListaLeilaoActivity extends AppCompatActivity {
+public class ListaLeilaoActivity extends AppCompatActivity{
 
    private static final String TITULO_APPBAR = "Leilões";
    private static final String MENSAGEM_AVISO_FALHA_AO_CARREGAR_LEILOES = "Não foi possível carregar os leilões";
@@ -28,35 +26,35 @@ public class ListaLeilaoActivity extends AppCompatActivity {
    private ListaLeilaoAdapter adapter;
 
    @Override
-   protected void onCreate(Bundle savedInstanceState) {
+   protected void onCreate(Bundle savedInstanceState){
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_lista_leilao);
       getSupportActionBar().setTitle(TITULO_APPBAR);
       configuraListaLeiloes();
    }
 
-   private void configuraListaLeiloes() {
+   private void configuraListaLeiloes(){
 
       configuraAdapter();
       configuraRecyclerView();
    }
 
-   private void configuraRecyclerView() {
+   private void configuraRecyclerView(){
       RecyclerView recyclerView = findViewById(R.id.lista_leilao_recyclerview);
       recyclerView.setAdapter(adapter);
    }
 
-   private void configuraAdapter() {
+   private void configuraAdapter(){
       adapter = new ListaLeilaoAdapter(this);
-      adapter.setOnItemClickListener(new ListaLeilaoAdapter.OnItemClickListener() {
+      adapter.setOnItemClickListener(new ListaLeilaoAdapter.OnItemClickListener(){
          @Override
-         public void onItemClick(Leilao leilao) {
+         public void onItemClick(Leilao leilao){
             vaiParaTelaDeLances(leilao);
          }
       });
    }
 
-   private void vaiParaTelaDeLances(Leilao leilao) {
+   private void vaiParaTelaDeLances(Leilao leilao){
       Intent vaiParaLancesLeilao = new Intent(
          ListaLeilaoActivity.this,
          LancesLeilaoActivity.class);
@@ -65,37 +63,34 @@ public class ListaLeilaoActivity extends AppCompatActivity {
    }
 
    @Override
-   protected void onResume() {
+   protected void onResume(){
       super.onResume();
-      buscaLeiloesNaAPIWeb(adapter, client);
+      new AtualizadorDeLeilao().buscaLeiloesNaAPIWeb(
+         adapter, client,
+         new AtualizadorDeLeilao.ErroCarregamentoListener(){
+            @Override
+            public void aoFalhar(String mensagem){
+               exibeToastFalha();
+            }
+         });
    }
 
-   public void buscaLeiloesNaAPIWeb(final ListaLeilaoAdapter adapter, LeilaoWebClient client) {
-      client.todos(new RespostaListener<List<Leilao>>() {
-         @Override
-         public void sucesso(List<Leilao> leiloes) {
-            adapter.atualiza(leiloes);
-         }
-
-         @Override
-         public void falha(String mensagem) {
-            Toast.makeText(ListaLeilaoActivity.this,
-               MENSAGEM_AVISO_FALHA_AO_CARREGAR_LEILOES,
-               Toast.LENGTH_SHORT).show();
-         }
-      });
+   private void exibeToastFalha(){
+      Toast.makeText(this,
+                     MENSAGEM_AVISO_FALHA_AO_CARREGAR_LEILOES,
+                     Toast.LENGTH_SHORT).show();
    }
 
    @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
+   public boolean onCreateOptionsMenu(Menu menu){
       getMenuInflater().inflate(R.menu.lista_leilao_menu, menu);
       return super.onCreateOptionsMenu(menu);
    }
 
    @Override
-   public boolean onOptionsItemSelected(MenuItem item) {
+   public boolean onOptionsItemSelected(MenuItem item){
       int itemId = item.getItemId();
-      if(itemId == R.id.lista_leilao_menu_usuarios) {
+      if(itemId == R.id.lista_leilao_menu_usuarios){
          Intent vaiParaListaDeUsuarios = new Intent(this, ListaUsuarioActivity.class);
          startActivity(vaiParaListaDeUsuarios);
       }
