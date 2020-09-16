@@ -23,8 +23,6 @@ import br.com.alura.leilao.model.Lance;
 import br.com.alura.leilao.model.Usuario;
 import br.com.alura.leilao.ui.activity.ListaUsuarioActivity;
 
-import static br.com.alura.leilao.ui.dialog.AvisoDialogManager.mostraAvisoValorInvalido;
-
 public class NovoLanceDialog {
 
    private static final String TITULO = "Novo lance";
@@ -37,13 +35,16 @@ public class NovoLanceDialog {
    private final Context context;
    private final LanceCriadoListener listener;
    private final UsuarioDAO dao;
+   private final AvisoDialogManager dialogManager;
 
-   public NovoLanceDialog(Context context,
-                          LanceCriadoListener listener,
-                          UsuarioDAO dao) {
+   public NovoLanceDialog(
+      Context context,
+      LanceCriadoListener listener,
+      UsuarioDAO dao, AvisoDialogManager dialogManager) {
       this.context = context;
       this.listener = listener;
       this.dao = dao;
+      this.dialogManager = dialogManager;
    }
 
    public void mostra() {
@@ -85,7 +86,8 @@ public class NovoLanceDialog {
       mostraDialogPropoeLance(viewCriada, campoUsuarios, campoValor);
    }
 
-   private void mostraDialogPropoeLance(View viewCriada, Spinner campoUsuarios, EditText campoValor) {
+   private void mostraDialogPropoeLance(
+      View viewCriada, Spinner campoUsuarios, EditText campoValor) {
       new AlertDialog.Builder(context)
          .setTitle(TITULO)
          .setView(viewCriada)
@@ -108,7 +110,7 @@ public class NovoLanceDialog {
                Lance novoLance = new Lance(usuario, valor);
                listener.lanceCriado(novoLance);
             } catch(NumberFormatException e) {
-               mostraAvisoValorInvalido(context);
+               dialogManager.mostraAvisoValorInvalido();
             }
          }
       };
