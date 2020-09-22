@@ -6,9 +6,10 @@ import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import static br.com.alura.leilao.model.formatter.FormatadorDeMoeda.formata;
+
 public class Lance implements Serializable, Comparable {
 
-   private static final Locale BRASIL = new Locale("pt", "BR");
    private final Usuario usuario;
    private final double valor;
    private final String valorFormatado;
@@ -65,10 +66,5 @@ public class Lance implements Serializable, Comparable {
 
       if(Double.compare(lance.valor, valor) != 0) return false;
       return usuario.equals(lance.usuario);
-   }
-
-   public String formata(double valor) {
-      NumberFormat formatador = NumberFormat.getCurrencyInstance(Lance.BRASIL);
-      return formatador.format(valor);
    }
 }
