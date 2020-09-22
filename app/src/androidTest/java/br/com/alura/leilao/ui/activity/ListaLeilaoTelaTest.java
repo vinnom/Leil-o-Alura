@@ -7,14 +7,15 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import br.com.alura.leilao.R;
 import br.com.alura.leilao.api.retrofit.client.WebClienteDeTeste;
 import br.com.alura.leilao.model.Leilao;
 
 import static androidx.test.core.app.ActivityScenario.launch;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static br.com.alura.leilao.ListaLeilaoTelaMatcher.apareceLeilaoComDescricaoEMaiorValor;
 
 public class ListaLeilaoTelaTest{
 
@@ -32,16 +33,19 @@ public class ListaLeilaoTelaTest{
       tentaSalvarLeilaoNaApiWeb(new Leilao("A"));
 
       launch(ListaLeilaoActivity.class);
-      onView(withText("A")).check(matches(isDisplayed()));
+      onView(withId(R.id.lista_leilao_recyclerview))
+         .check(matches(apareceLeilaoComDescricaoEMaiorValor(0, "A", 0.0)));
    }
 
    @Test
    public void deve_CarregarDuasViews_QuandoBuscaNaAPIWeb() throws IOException{
-      tentaSalvarLeilaoNaApiWeb(new Leilao("A"), new Leilao("B"));
+      tentaSalvarLeilaoNaApiWeb(new Leilao("A"), new Leilao("AB"));
 
       launch(ListaLeilaoActivity.class);
-      onView(withText("A")).check(matches(isDisplayed()));
-      onView(withText("B")).check(matches(isDisplayed()));
+      onView(withId(R.id.lista_leilao_recyclerview))
+         .check(matches(apareceLeilaoComDescricaoEMaiorValor(0, "A", 0.0)));
+      onView(withId(R.id.lista_leilao_recyclerview))
+         .check(matches(apareceLeilaoComDescricaoEMaiorValor(1, "AB", 0.0)));
    }
 
    @After
