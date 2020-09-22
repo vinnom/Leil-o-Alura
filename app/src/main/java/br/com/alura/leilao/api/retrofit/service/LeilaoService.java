@@ -10,12 +10,11 @@ import retrofit2.http.GET;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
-public interface LeilaoService {
+public interface LeilaoService{
 
    @GET("leilao")
    Call<List<Leilao>> todos();
 
    @PUT("leilao/{id}/lance")
    Call<Void> propoe(@Path("id") Long id, @Body Lance lance);
-
 }

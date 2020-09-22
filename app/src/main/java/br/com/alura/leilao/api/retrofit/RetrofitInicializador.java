@@ -2,6 +2,8 @@ package br.com.alura.leilao.api.retrofit;
 
 import androidx.annotation.NonNull;
 
+import br.com.alura.leilao.BuildConfig;
+import br.com.alura.leilao.api.retrofit.converter.StringConverterFactory;
 import br.com.alura.leilao.api.retrofit.service.LeilaoService;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -12,14 +14,15 @@ import static okhttp3.logging.HttpLoggingInterceptor.Level.BODY;
 
 public class RetrofitInicializador {
 
-   private static final String URL_BASE = "http://192.168.0.2:8080/";
-   private final Retrofit retrofit;
+   private static final String URL_BASE = BuildConfig.URL_BASE;
+   protected final Retrofit retrofit;
 
    public RetrofitInicializador() {
       OkHttpClient client = configuraHttpClient();
       retrofit = new Retrofit.Builder()
          .baseUrl(URL_BASE)
          .client(client)
+         .addConverterFactory(new StringConverterFactory())
          .addConverterFactory(GsonConverterFactory.create())
          .build();
    }
@@ -34,8 +37,7 @@ public class RetrofitInicializador {
          .build();
    }
 
-   public LeilaoService getLeilaoService() {
+   public LeilaoService getLeilaoService(){
       return retrofit.create(LeilaoService.class);
    }
-
 }
