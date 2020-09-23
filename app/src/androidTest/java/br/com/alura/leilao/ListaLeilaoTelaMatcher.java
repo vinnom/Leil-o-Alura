@@ -44,8 +44,10 @@ public class ListaLeilaoTelaMatcher{
             String maiorLanceReal = tvMaiorLance.getText().toString();
 
             boolean estaNaPosicaoEsperada = (posicaoReal == posicao);
-            boolean temDescricaoEsperada = (descricaoReal.equals(descricao));
-            boolean temMaiorLanceEsperado = (maiorLanceReal.equals(formata(valor)));
+            boolean temDescricaoEsperada = (descricaoReal.equals(descricao)) &&
+               (isDisplayed().matches(tvDescricao));
+            boolean temMaiorLanceEsperado = (maiorLanceReal.equals(formata(valor))) &&
+               (isDisplayed().matches(tvMaiorLance));
 
 
             return estaNaPosicaoEsperada
