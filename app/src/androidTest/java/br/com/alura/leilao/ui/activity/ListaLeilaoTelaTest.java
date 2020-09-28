@@ -1,11 +1,6 @@
 package br.com.alura.leilao.ui.activity;
 
-import androidx.test.espresso.Espresso;
-import androidx.test.espresso.FailureHandler;
-import androidx.test.espresso.assertion.ViewAssertions;
-import androidx.test.espresso.base.DefaultFailureHandler;
 import androidx.test.espresso.contrib.RecyclerViewActions;
-import androidx.test.espresso.matcher.ViewMatchers;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -20,7 +15,6 @@ import br.com.alura.leilao.model.Leilao;
 
 import static androidx.test.core.app.ActivityScenario.launch;
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.Espresso.setFailureHandler;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static br.com.alura.leilao.ListaLeilaoTelaMatcher.apareceLeilaoComDescricaoEMaiorValor;
