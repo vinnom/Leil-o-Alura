@@ -3,14 +3,13 @@ package br.com.alura.leilao.ui.activity;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 
+import br.com.alura.leilao.BaseTesteIntegracao;
 import br.com.alura.leilao.R;
-import br.com.alura.leilao.api.retrofit.client.WebClienteDeTeste;
 import br.com.alura.leilao.model.Leilao;
 
 import static androidx.test.core.app.ActivityScenario.launch;
@@ -19,20 +18,16 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static br.com.alura.leilao.ListaLeilaoTelaMatcher.apareceLeilaoComDescricaoEMaiorValor;
 
-public class ListaLeilaoTelaTest{
-
-   private static final String FALHA_LIMPEZA_BD_API_WEB = "Não foi possível resetar o banco de dados";
-   private static final String FALHA_AO_SALVAR_LEILAO = "Não foi possível salvar o leilão";
-   private final WebClienteDeTeste cliente = new WebClienteDeTeste();
+public class ListaLeilaoTelaTest extends BaseTesteIntegracao{
 
    @Before
    public void setup() throws IOException{
-      resetaBD();
+      resetaBDAPIWeb();
    }
 
    @Test
    public void deve_MostrarUmaView_QuandoBuscaUmLeilaoNaAPIWeb() throws IOException{
-      tentaSalvarLeilaoNaApiWeb(new Leilao("A"));
+      tentaSalvarLeilaoNaAPIWeb(new Leilao("A"));
 
       launch(ListaLeilaoActivity.class);
       onView(withId(R.id.lista_leilao_recyclerview))
@@ -41,7 +36,7 @@ public class ListaLeilaoTelaTest{
 
    @Test
    public void deve_MostrarDuasViews_QuandoBuscaDoisLeiloesNaAPIWeb() throws IOException{
-      tentaSalvarLeilaoNaApiWeb(new Leilao("A"), new Leilao("AB"));
+      tentaSalvarLeilaoNaAPIWeb(new Leilao("A"), new Leilao("AB"));
 
       launch(ListaLeilaoActivity.class);
       onView(withId(R.id.lista_leilao_recyclerview))
@@ -52,7 +47,7 @@ public class ListaLeilaoTelaTest{
 
    @Test
    public void deve_MostrarUltimaView_QuandoBuscaOitLeiloesNaAPIWeb() throws IOException{
-      tentaSalvarLeilaoNaApiWeb(
+      tentaSalvarLeilaoNaAPIWeb(
          new Leilao("A"),
          new Leilao("AB"),
          new Leilao("ABC"),
@@ -70,23 +65,7 @@ public class ListaLeilaoTelaTest{
    }
 
    @After
-   public void tearDown() throws IOException{
-      resetaBD();
-   }
-
-   private void resetaBD() throws IOException{
-      boolean resetado = cliente.reseta();
-      if(!resetado){
-         Assert.fail(FALHA_LIMPEZA_BD_API_WEB);
-      }
-   }
-
-   private void tentaSalvarLeilaoNaApiWeb(Leilao... leiloes) throws IOException{
-      for(Leilao l : leiloes){
-         Leilao leilao = cliente.salva(l);
-         if(leilao == null){
-            Assert.fail(FALHA_AO_SALVAR_LEILAO);
-         }
-      }
+   public void teardown() throws IOException{
+      resetaBDAPIWeb();
    }
 }

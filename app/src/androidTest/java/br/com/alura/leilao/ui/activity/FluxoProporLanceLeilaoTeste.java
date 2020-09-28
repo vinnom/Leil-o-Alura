@@ -1,18 +1,25 @@
 package br.com.alura.leilao.ui.activity;
 
 
-import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 
 import androidx.test.filters.LargeTest;
-import androidx.test.platform.app.InstrumentationRegistry;
 
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+
 import br.com.alura.leilao.BaseTesteIntegracao;
 import br.com.alura.leilao.BuildConfig;
 import br.com.alura.leilao.R;
+import br.com.alura.leilao.model.Leilao;
 
 import static androidx.test.core.app.ActivityScenario.launch;
 import static androidx.test.espresso.Espresso.onView;
@@ -21,31 +28,44 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
+import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
-public class FluxoAdicaoUsuarioTeste extends BaseTesteIntegracao{
+public class FluxoProporLanceLeilaoTeste extends BaseTesteIntegracao{
 
    @Before
-   public void setup(){
+   public void setup() throws IOException{
+      resetaBDAPIWeb();
       appContext.deleteDatabase(BuildConfig.BANCO_DADOS);
    }
 
    @Test
-   public void deve_AdicionarUsuarioE_MostrarViewComIdENome(){
+   public void fluxoProporLanceLeilaoTeste() throws IOException{
+      tentaSalvarLeilaoNaAPIWeb(new Leilao("A"));
+
       launch(ListaLeilaoActivity.class);
 
-      onView(
-         allOf(withId(R.id.lista_leilao_menu_usuarios),
-               withContentDescription("Usuários"),
-               isDescendantOfA(withId(R.id.action_bar)),
-               isDisplayed()))
-         .perform(click());
+      onView(withId(R.id.lista_leilao_recyclerview))
+         .perform(actionOnItemAtPosition(0, click()));
+
+      onView(withId(R.id.lances_leilao_fab_adiciona))
+         .perform(scrollTo(), click());
+
+      onView(allOf(withId(R.id.alertTitle),
+                   isDisplayed()))
+         .check(matches(withText("Usuários não encontrados")));
+
+      onView(allOf(withId(android.R.id.message),
+                   isDisplayed()))
+         .check(matches(withText("Não existe usuários cadastrados! Cadastre um usuário para propor o lance.")));
+
+      onView(allOf(withId(android.R.id.button1),
+                   withText("Cadastrar usuário")))
+         .perform(scrollTo(), click());
 
       onView(allOf(withId(R.id.lista_usuario_fab_adiciona),
                    isDisplayed()))
@@ -56,20 +76,14 @@ public class FluxoAdicaoUsuarioTeste extends BaseTesteIntegracao{
                isDisplayed()))
          .perform(replaceText("Usuário"), closeSoftKeyboard());
 
-      onView(
-         allOf(withId(android.R.id.button1),
-               withText("Adicionar"),
-               isDisplayed()))
+      onView(allOf(withId(android.R.id.button1),
+                   withText("Adicionar")))
          .perform(scrollTo(), click());
-
-      onView(
-         allOf(withId(R.id.item_usuario_id_com_nome),
-               isDisplayed()))
-         .check(matches(withText("(1) Usuário")));
    }
 
    @After
-   public void teardown(){
+   public void teardown() throws IOException{
+      resetaBDAPIWeb();
       appContext.deleteDatabase(BuildConfig.BANCO_DADOS);
    }
 }
