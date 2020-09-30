@@ -121,6 +121,12 @@ public class LancesLeilaoActivity extends AppCompatActivity{
          for(Lance lance : leilao.getTresMaioresLances()){
             stringBuilder.append("- ");
             stringBuilder.append(lance.getValorFormatado());
+            stringBuilder.append(" - ");
+            stringBuilder.append("(");
+            stringBuilder.append(lance.getUsuario().getId());
+            stringBuilder.append(")");
+            stringBuilder.append(" ");
+            stringBuilder.append(lance.getUsuario().getNome());
             stringBuilder.append("\n");
          }
       }
