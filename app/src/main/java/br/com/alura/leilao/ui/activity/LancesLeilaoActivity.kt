@@ -41,7 +41,7 @@ class LancesLeilaoActivity : AppCompatActivity() {
     }
 
     private fun inicializaAtributos() {
-        dao = UsuarioDAO(this)
+        dao = UsuarioDAO()
     }
 
     private fun configuraFab() {
@@ -89,7 +89,7 @@ class LancesLeilaoActivity : AppCompatActivity() {
     private fun adicionaMaioresLances(leilao: Leilao) {
         val stringBuilder = StringBuilder()
         if (leilao.lances[0].valor != 0.0) {
-            for (lance in leilao.tresMaioresLances) {
+            for (lance in leilao.getTresMaioresLances()) {
                 stringBuilder.append("- ")
                 stringBuilder.append(lance.valorFormatado)
                 stringBuilder.append(" - (")
@@ -103,11 +103,11 @@ class LancesLeilaoActivity : AppCompatActivity() {
     }
 
     private fun adicionaMenorLance(leilao: Leilao) {
-        binding.lancesLeilaoMenorLance.text = leilao.menorLanceFormatado
+        binding.lancesLeilaoMenorLance.text = leilao.getMenorLanceFormatado()
     }
 
     private fun adicionaMaiorLance(leilao: Leilao) {
-        binding.lancesLeilaoMaiorLance.text = leilao.maiorLanceFormatado
+        binding.lancesLeilaoMaiorLance.text = leilao.getMaiorLanceFormatado()
     }
 
     private fun adicionaDescricao(leilao: Leilao) {

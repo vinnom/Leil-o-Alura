@@ -26,7 +26,7 @@ class ListaUsuarioActivity : AppCompatActivity() {
     }
 
     private fun inicializaAtributos() {
-        dao = UsuarioDAO(this)
+        dao = UsuarioDAO()
         adapter = ListaUsuarioAdapter(this)
     }
 

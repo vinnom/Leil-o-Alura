@@ -45,7 +45,7 @@ class ListaLeilaoActivity : AppCompatActivity() {
         })
     }
 
-    private fun vaiParaTelaDeLances(leilao: Leilao) {
+    private fun vaiParaTelaDeLances(leilao: Leilao?) {
         val intent = Intent(this, LancesLeilaoActivity::class.java)
         intent.putExtra(CHAVE_LEILAO, leilao)
         startActivity(intent)
@@ -56,7 +56,7 @@ class ListaLeilaoActivity : AppCompatActivity() {
         AtualizadorDeLeilao().buscaLeiloesNaAPIWeb(
             adapter, client,
             object : AtualizadorDeLeilao.ErroCarregamentoListener {
-                override fun aoFalhar(mensagem: String) {
+                override fun aoFalhar(mensagem: String?) {
                     exibeToastFalha()
                 }
             }
@@ -79,6 +79,7 @@ class ListaLeilaoActivity : AppCompatActivity() {
                 startActivity(intent)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

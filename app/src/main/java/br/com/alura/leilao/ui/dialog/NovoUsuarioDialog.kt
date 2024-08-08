@@ -1,61 +1,43 @@
-package br.com.alura.leilao.ui.dialog;
+package br.com.alura.leilao.ui.dialog
 
-import android.content.Context;
-import android.content.DialogInterface;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
+import android.content.Context
+import android.content.DialogInterface
+import android.view.LayoutInflater
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import br.com.alura.leilao.databinding.FormUsuarioBinding
+import br.com.alura.leilao.model.Usuario
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
+class NovoUsuarioDialog(
+    private val context: Context,
+    private val listener: UsuarioCriadoListener
+) {
 
-import com.google.android.material.textfield.TextInputLayout;
+    companion object {
+        private const val TITULO = "Novo usuário"
+        private const val DESCRICAO_BOTAO_POSITIVO = "Adicionar"
+    }
 
-import br.com.alura.leilao.R;
-import br.com.alura.leilao.model.Usuario;
+    fun mostra() {
+        val binding = FormUsuarioBinding.inflate(LayoutInflater.from(context))
+        val campoNome = binding.formUsuarioNome.editText
 
-public class NovoUsuarioDialog {
+        AlertDialog.Builder(context)
+            .setTitle(TITULO)
+            .setView(binding.root)
+            .setPositiveButton(DESCRICAO_BOTAO_POSITIVO, criaNovoUsuarioListener(campoNome))
+            .show()
+    }
 
-   private static final String TITULO = "Novo usuário";
-   private static final String DESCRICAO_BOTAO_POSITIVO = "Adicionar";
-   private final Context context;
-   private final UsuarioCriadoListener listener;
+    private fun criaNovoUsuarioListener(campoNome: EditText?) =
+        DialogInterface.OnClickListener { _, _ ->
+            val nome = campoNome?.text.toString()
+            val novoUsuario = Usuario(nome = nome)
+            listener.criado(novoUsuario)
+        }
 
-   public NovoUsuarioDialog(Context context,
-                            UsuarioCriadoListener listener) {
-      this.context = context;
-      this.listener = listener;
-   }
-
-   public void mostra() {
-      final View viewCriada = LayoutInflater.from(context)
-         .inflate(R.layout.form_usuario, null, false);
-      TextInputLayout textInputNome = viewCriada.findViewById(R.id.form_usuario_nome);
-
-      EditText campoNome = textInputNome.getEditText();
-
-      new AlertDialog.Builder(context)
-         .setTitle(TITULO)
-         .setView(viewCriada)
-         .setPositiveButton(DESCRICAO_BOTAO_POSITIVO,
-            criaNovoUsuarioListener(campoNome))
-         .show();
-   }
-
-   @NonNull
-   private DialogInterface.OnClickListener criaNovoUsuarioListener(final EditText campoNome) {
-      return new DialogInterface.OnClickListener() {
-         @Override
-         public void onClick(DialogInterface dialogInterface, int i) {
-            String nome = campoNome.getText().toString();
-            Usuario novoUsuario = new Usuario(nome);
-            listener.criado(novoUsuario);
-         }
-      };
-   }
-
-   public interface UsuarioCriadoListener {
-      void criado(Usuario usuario);
-   }
-
+    interface UsuarioCriadoListener {
+        fun criado(usuario: Usuario)
+    }
 }
+

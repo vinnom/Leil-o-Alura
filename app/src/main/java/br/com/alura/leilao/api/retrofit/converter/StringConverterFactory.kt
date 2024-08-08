@@ -1,8 +1,8 @@
 package br.com.alura.leilao.api.retrofit.converter
 
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Converter
 import retrofit2.Retrofit
 import java.lang.reflect.Type
@@ -19,7 +19,7 @@ class StringConverterFactory : Converter.Factory() {
     ): Converter<*, RequestBody>? {
         return if (String::class.java == type) {
             Converter<String, RequestBody> { value ->
-                RequestBody.create(MEDIA_TYPE, value)
+                value.toRequestBody(MEDIA_TYPE)
             }
         } else {
             null

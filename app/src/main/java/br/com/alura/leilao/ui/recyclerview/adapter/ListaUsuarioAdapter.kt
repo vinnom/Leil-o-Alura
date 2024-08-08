@@ -1,69 +1,48 @@
-package br.com.alura.leilao.ui.recyclerview.adapter;
+package br.com.alura.leilao.ui.recyclerview.adapter
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import br.com.alura.leilao.R
+import br.com.alura.leilao.model.Usuario
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+class ListaUsuarioAdapter(private val context: Context) :
+    RecyclerView.Adapter<ListaUsuarioAdapter.ViewHolder>() {
 
-import java.util.ArrayList;
-import java.util.List;
+    private val usuarios: MutableList<Usuario> = ArrayList()
 
-import br.com.alura.leilao.R;
-import br.com.alura.leilao.model.Usuario;
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val viewCriada = LayoutInflater.from(context).inflate(R.layout.item_usuario, parent, false)
+        return ViewHolder(viewCriada)
+    }
 
-public class ListaUsuarioAdapter extends RecyclerView.Adapter<ListaUsuarioAdapter.ViewHolder> {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.vincula(usuarios[position])
+    }
 
-   private final List<Usuario> usuarios = new ArrayList<>();
-   private final Context context;
+    override fun getItemCount(): Int {
+        return usuarios.size
+    }
 
-   public ListaUsuarioAdapter(Context context) {
-      this.context = context;
-   }
+    fun adiciona(usuarios: List<Usuario>) {
+        for (usuario in usuarios) {
+            adiciona(usuario)
+        }
+    }
 
-   @NonNull
-   @Override
-   public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-      View viewCriada = LayoutInflater.from(context).inflate(R.layout.item_usuario, parent, false);
-      return new ViewHolder(viewCriada);
-   }
+    fun adiciona(usuario: Usuario) {
+        usuarios.add(usuario)
+        notifyItemInserted(itemCount - 1)
+    }
 
-   @Override
-   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-      holder.vincula(usuarios.get(position));
-   }
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val idComUsuario: TextView = itemView.findViewById(R.id.item_usuario_id_com_nome)
 
-   @Override
-   public int getItemCount() {
-      return usuarios.size();
-   }
-
-   public void adiciona(List<Usuario> usuarios) {
-      for(Usuario usuario :
-         usuarios) {
-         adiciona(usuario);
-      }
-   }
-
-   public void adiciona(Usuario usuario) {
-      usuarios.add(usuario);
-      notifyItemInserted(getItemCount() - 1);
-   }
-
-   public class ViewHolder extends RecyclerView.ViewHolder {
-      private final TextView idComUsuario;
-
-      ViewHolder(View itemView) {
-         super(itemView);
-         idComUsuario = itemView.findViewById(R.id.item_usuario_id_com_nome);
-      }
-
-      void vincula(Usuario usuario) {
-         idComUsuario.setText(usuario.toString());
-      }
-
-   }
+        fun vincula(usuario: Usuario) {
+            idComUsuario.text = usuario.toString()
+        }
+    }
 }

@@ -1,133 +1,114 @@
-package br.com.alura.leilao.ui.dialog;
+package br.com.alura.leilao.ui.dialog
 
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
+import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.Spinner
+import androidx.appcompat.app.AlertDialog
+import br.com.alura.leilao.R
+import br.com.alura.leilao.database.dao.UsuarioDAO
+import br.com.alura.leilao.model.Lance
+import br.com.alura.leilao.model.Usuario
+import br.com.alura.leilao.ui.activity.ListaUsuarioActivity
+import com.google.android.material.textfield.TextInputLayout
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
+class NovoLanceDialog(
+    private val context: Context,
+    private val listener: LanceCriadoListener,
+    private val dao: UsuarioDAO,
+    private val dialogManager: AvisoDialogManager
+) {
 
-import com.google.android.material.textfield.TextInputLayout;
+    companion object {
+        private const val TITULO = "Novo lance"
+        private const val DESCRICAO_BOTAO_POSITIVO = "Propor"
+        private const val DESCRICAO_BOTAO_NEGATIVO = "Cancelar"
+        private const val USUARIOS_NAO_ENCONTRADOS = "Usuários não encontrados"
+        private const val MENSAGEM_NAO_EXISTE_USUARIOS_CADASTRADOS =
+            "Não existe usuários cadastrados! Cadastre um usuário para propor o lance."
+        private const val CADASTRAR_USUARIO = "Cadastrar usuário"
+    }
 
-import java.util.List;
+    fun mostra() {
+        val usuarios = dao.todos()
+        if (naoTemUsuariosCadastrados(usuarios)) return
+        configuraView(usuarios)
+    }
 
-import br.com.alura.leilao.R;
-import br.com.alura.leilao.database.dao.UsuarioDAO;
-import br.com.alura.leilao.model.Lance;
-import br.com.alura.leilao.model.Usuario;
-import br.com.alura.leilao.ui.activity.ListaUsuarioActivity;
+    private fun naoTemUsuariosCadastrados(usuarios: List<Usuario>): Boolean {
+        if (usuarios.isEmpty()) {
+            mostraDialogUsuarioNaoCadastrado()
+            return true
+        }
+        return false
+    }
 
-public class NovoLanceDialog {
+    private fun mostraDialogUsuarioNaoCadastrado() {
+        AlertDialog.Builder(context)
+            .setTitle(USUARIOS_NAO_ENCONTRADOS)
+            .setMessage(MENSAGEM_NAO_EXISTE_USUARIOS_CADASTRADOS)
+            .setPositiveButton(CADASTRAR_USUARIO) { _, _ ->
+                val vaiParaListaDeUsuarios = Intent(context, ListaUsuarioActivity::class.java)
+                context.startActivity(vaiParaListaDeUsuarios)
+            }.show()
+    }
 
-   private static final String TITULO = "Novo lance";
-   private static final String DESCRICAO_BOTAO_POSITIVO = "Propor";
-   private static final String DESCRICAO_BOTAO_NEGATIVO = "Cancelar";
-   private static final String USUARIOS_NAO_ENCONTRADOS = "Usuários não encontrados";
-   private static final String MENSAGEM_NAO_EXISTE_USUARIOS_CADASTRADOS = "Não existe usuários cadastrados! Cadastre um usuário para propor o lance.";
-   private static final String CADASTRAR_USUARIO = "Cadastrar usuário";
+    private fun configuraView(usuarios: List<Usuario>) {
+        val viewCriada = LayoutInflater.from(context)
+            .inflate(R.layout.form_lance, null, false)
 
-   private final Context context;
-   private final LanceCriadoListener listener;
-   private final UsuarioDAO dao;
-   private final AvisoDialogManager dialogManager;
+        val campoUsuarios: Spinner = viewCriada.findViewById(R.id.form_lance_usuario)
+        val textInputValor: TextInputLayout = viewCriada.findViewById(R.id.form_lance_valor)
 
-   public NovoLanceDialog(
-      Context context,
-      LanceCriadoListener listener,
-      UsuarioDAO dao, AvisoDialogManager dialogManager) {
-      this.context = context;
-      this.listener = listener;
-      this.dao = dao;
-      this.dialogManager = dialogManager;
-   }
+        configuraSpinnerUsuarios(usuarios, campoUsuarios)
+        val campoValor: EditText? = textInputValor.editText
+        mostraDialogPropoeLance(viewCriada, campoUsuarios, campoValor)
+    }
 
-   public void mostra() {
-      List<Usuario> usuarios = dao.todos();
-      if(naoTemUsuariosCadastrados(usuarios)) return;
-      configuraView(usuarios);
-   }
+    private fun mostraDialogPropoeLance(
+        viewCriada: View, campoUsuarios: Spinner, campoValor: EditText?
+    ) {
+        AlertDialog.Builder(context)
+            .setTitle(TITULO)
+            .setView(viewCriada)
+            .setPositiveButton(
+                DESCRICAO_BOTAO_POSITIVO,
+                criaNovoLanceListener(campoValor, campoUsuarios)
+            )
+            .setNegativeButton(DESCRICAO_BOTAO_NEGATIVO, null)
+            .show()
+    }
 
-   private boolean naoTemUsuariosCadastrados(List<Usuario> usuarios) {
-      if(usuarios.isEmpty()) {
-         mostraDialogUsuarioNaoCadastrado();
-         return true;
-      }
-      return false;
-   }
-
-   private void mostraDialogUsuarioNaoCadastrado() {
-      new AlertDialog.Builder(context)
-         .setTitle(USUARIOS_NAO_ENCONTRADOS)
-         .setMessage(MENSAGEM_NAO_EXISTE_USUARIOS_CADASTRADOS)
-         .setPositiveButton(CADASTRAR_USUARIO, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-               Intent vaiParaListaDeUsuarios = new Intent(context, ListaUsuarioActivity.class);
-               context.startActivity(vaiParaListaDeUsuarios);
-            }
-         }).show();
-   }
-
-   private void configuraView(List<Usuario> usuarios) {
-      View viewCriada = LayoutInflater.from(context)
-         .inflate(R.layout.form_lance, null, false);
-
-      Spinner campoUsuarios = viewCriada.findViewById(R.id.form_lance_usuario);
-      TextInputLayout textInputValor = viewCriada.findViewById(R.id.form_lance_valor);
-
-      configuraSpinnerUsuarios(usuarios, campoUsuarios);
-      EditText campoValor = textInputValor.getEditText();
-      mostraDialogPropoeLance(viewCriada, campoUsuarios, campoValor);
-   }
-
-   private void mostraDialogPropoeLance(
-      View viewCriada, Spinner campoUsuarios, EditText campoValor) {
-      new AlertDialog.Builder(context)
-         .setTitle(TITULO)
-         .setView(viewCriada)
-         .setPositiveButton(DESCRICAO_BOTAO_POSITIVO,
-            criaNovoLanceListener(campoValor, campoUsuarios))
-         .setNegativeButton(DESCRICAO_BOTAO_NEGATIVO, null)
-         .show();
-   }
-
-   @NonNull
-   private DialogInterface.OnClickListener criaNovoLanceListener(
-      final EditText campoValor, final Spinner campoUsuarios) {
-      return new DialogInterface.OnClickListener() {
-         @Override
-         public void onClick(DialogInterface dialogInterface, int i) {
-            String valorEmTexto = campoValor.getText().toString();
-            Usuario usuario = (Usuario) campoUsuarios.getSelectedItem();
+    private fun criaNovoLanceListener(
+        campoValor: EditText?, campoUsuarios: Spinner
+    ): DialogInterface.OnClickListener {
+        return DialogInterface.OnClickListener { _, _ ->
+            val valorEmTexto = campoValor?.text.toString()
+            val usuario = campoUsuarios.selectedItem as Usuario
             try {
-               double valor = Double.parseDouble(valorEmTexto);
-               Lance novoLance = new Lance(usuario, valor);
-               listener.lanceCriado(novoLance);
-            } catch(NumberFormatException e) {
-               dialogManager.mostraAvisoValorInvalido();
+                val valor = valorEmTexto.toDouble()
+                val novoLance = Lance(usuario, valor)
+                listener.lanceCriado(novoLance)
+            } catch (e: NumberFormatException) {
+                dialogManager.mostraAvisoValorInvalido()
             }
-         }
-      };
-   }
+        }
+    }
 
-   private void configuraSpinnerUsuarios(List<Usuario> usuarios,
-                                         Spinner usuariosDisponiveis) {
-      SpinnerAdapter adapter = new ArrayAdapter<>(
-         context,
-         android.R.layout.simple_spinner_dropdown_item,
-         usuarios);
-      usuariosDisponiveis.setAdapter(adapter);
-   }
+    private fun configuraSpinnerUsuarios(usuarios: List<Usuario>, usuariosDisponiveis: Spinner) {
+        val adapter = ArrayAdapter(
+            context,
+            android.R.layout.simple_spinner_dropdown_item,
+            usuarios
+        )
+        usuariosDisponiveis.adapter = adapter
+    }
 
-   public interface LanceCriadoListener {
-      void lanceCriado(Lance lance);
-   }
-
-
+    interface LanceCriadoListener {
+        fun lanceCriado(lance: Lance)
+    }
 }

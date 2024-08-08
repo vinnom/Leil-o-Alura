@@ -27,12 +27,12 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         debug {
-            buildConfigField("String", "URL_BASE", "\"http://192.168.0.2:8080/\"")
+            buildConfigField("String", "URL_BASE", "\"http://172.24.45.122:8080/\"")
             buildConfigField("String", "BANCO_DADOS", "\"leilao-db\"")
         }
         create("simulado") {
             initWith(getByName("debug"))
-            buildConfigField("String", "URL_BASE", "\"http://192.168.0.2:8081/\"")
+            buildConfigField("String", "URL_BASE", "\"http://172.24.45.122:8081/\"")
             buildConfigField("String", "BANCO_DADOS", "\"leilao-teste-db\"")
         }
     }

@@ -1,33 +1,23 @@
-package br.com.alura.leilao.ui;
+package br.com.alura.leilao.ui
 
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView
+import br.com.alura.leilao.database.dao.UsuarioDAO
+import br.com.alura.leilao.model.Usuario
+import br.com.alura.leilao.ui.recyclerview.adapter.ListaUsuarioAdapter
 
-import br.com.alura.leilao.database.dao.UsuarioDAO;
-import br.com.alura.leilao.model.Usuario;
-import br.com.alura.leilao.ui.recyclerview.adapter.ListaUsuarioAdapter;
+class AtualizadorDeUsuario(
+    private val dao: UsuarioDAO,
+    private val adapter: ListaUsuarioAdapter,
+    private val recyclerView: RecyclerView
+) {
 
-public class AtualizadorDeUsuario {
+    fun salva(usuario: Usuario) {
+        val usuarioSalvo = dao.salva(usuario)
+        atualizaNaLista(usuarioSalvo)
+    }
 
-   private final UsuarioDAO dao;
-   private final ListaUsuarioAdapter adapter;
-   private final RecyclerView recyclerView;
-
-   public AtualizadorDeUsuario(UsuarioDAO dao,
-                               ListaUsuarioAdapter adapter,
-                               RecyclerView recyclerView) {
-      this.dao = dao;
-      this.adapter = adapter;
-      this.recyclerView = recyclerView;
-   }
-
-   public void salva(Usuario usuario) {
-      Usuario usuarioSalvo = dao.salva(usuario);
-      atualizaNaLista(usuarioSalvo);
-   }
-
-   private void atualizaNaLista(Usuario usuario) {
-      adapter.adiciona(usuario);
-      recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
-   }
-
+    private fun atualizaNaLista(usuario: Usuario) {
+        adapter.adiciona(usuario)
+        recyclerView.smoothScrollToPosition(adapter.itemCount - 1)
+    }
 }

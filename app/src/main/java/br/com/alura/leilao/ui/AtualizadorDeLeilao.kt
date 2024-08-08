@@ -1,33 +1,29 @@
-package br.com.alura.leilao.ui;
+package br.com.alura.leilao.ui
 
-import java.util.List;
+import br.com.alura.leilao.api.retrofit.client.LeilaoWebClient
+import br.com.alura.leilao.api.retrofit.client.RespostaListener
+import br.com.alura.leilao.model.Leilao
+import br.com.alura.leilao.ui.recyclerview.adapter.ListaLeilaoAdapter
 
-import br.com.alura.leilao.api.retrofit.client.LeilaoWebClient;
-import br.com.alura.leilao.api.retrofit.client.RespostaListener;
-import br.com.alura.leilao.model.Leilao;
-import br.com.alura.leilao.ui.recyclerview.adapter.ListaLeilaoAdapter;
+class AtualizadorDeLeilao {
 
-public class AtualizadorDeLeilao{
+    fun buscaLeiloesNaAPIWeb(
+        adapter: ListaLeilaoAdapter,
+        client: LeilaoWebClient,
+        erroCarregamentoListener: ErroCarregamentoListener
+    ) {
+        client.todos(object : RespostaListener<List<Leilao>> {
+            override fun sucesso(resposta: List<Leilao>?) {
+                adapter.atualiza(resposta)
+            }
 
-   public void buscaLeiloesNaAPIWeb(
-      final ListaLeilaoAdapter adapter,
-      LeilaoWebClient client,
-      final ErroCarregamentoListener erroCarregamentoListener)
-   {
-      client.todos(new RespostaListener<List<Leilao>>(){
-         @Override
-         public void sucesso(List<Leilao> leiloes){
-            adapter.atualiza(leiloes);
-         }
+            override fun falha(mensagem: String?) {
+                erroCarregamentoListener.aoFalhar(mensagem)
+            }
+        })
+    }
 
-         @Override
-         public void falha(String mensagem){
-            erroCarregamentoListener.aoFalhar(mensagem);
-         }
-      });
-   }
-
-   public interface ErroCarregamentoListener{
-      void aoFalhar(String mensagem);
-   }
+    interface ErroCarregamentoListener {
+        fun aoFalhar(mensagem: String?)
+    }
 }

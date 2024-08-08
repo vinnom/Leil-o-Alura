@@ -23,7 +23,7 @@ class EnviadorDeLance(
                     listener.processado(leilao)
                 }
 
-                override fun falha(mensagem: String) {
+                override fun falha(mensagem: String?) {
                     dialogManager.mostraToastFalhaNoEnvio()
                 }
             })
