@@ -29,47 +29,47 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
-public class FluxoAdicaoUsuarioTeste extends BaseTesteIntegracao{
+public class FluxoAdicaoUsuarioTeste extends BaseTesteIntegracao {
 
-   @Before
-   public void setup(){
-      appContext.deleteDatabase(BuildConfig.BANCO_DADOS);
-   }
+    @Before
+    public void setup() {
+        appContext.deleteDatabase(BuildConfig.BANCO_DADOS);
+    }
 
-   @Test
-   public void deve_AdicionarUsuarioE_MostrarViewComIdENome(){
-      launch(ListaLeilaoActivity.class);
+    @Test
+    public void deve_AdicionarUsuarioE_MostrarViewComIdENome() {
+        launch(ListaLeilaoActivity.class);
 
-      onView(
-         allOf(withId(R.id.lista_leilao_menu_usuarios),
-               withContentDescription("Usuários"),
-               isDescendantOfA(withId(R.id.action_bar)),
-               isDisplayed()))
-         .perform(click());
+        onView(
+                allOf(withId(R.id.lista_leilao_menu_usuarios),
+                        withContentDescription("Usuários"),
+                        isDescendantOfA(withId(R.id.action_bar)),
+                        isDisplayed()))
+                .perform(click());
 
-      onView(allOf(withId(R.id.lista_usuario_fab_adiciona),
-                   isDisplayed()))
-         .perform(click());
+        onView(allOf(withId(R.id.lista_usuario_fab_adiciona),
+                isDisplayed()))
+                .perform(click());
 
-      onView(
-         allOf(withId(R.id.form_usuario_nome_edittext),
-               isDisplayed()))
-         .perform(replaceText("Usuário"), closeSoftKeyboard());
+        onView(
+                allOf(withId(R.id.form_usuario_nome_edittext),
+                        isDisplayed()))
+                .perform(replaceText("Usuário"), closeSoftKeyboard());
 
-      onView(
-         allOf(withId(android.R.id.button1),
-               withText("Adicionar"),
-               isDisplayed()))
-         .perform(scrollTo(), click());
+        onView(
+                allOf(withId(android.R.id.button1),
+                        withText("Adicionar"),
+                        isDisplayed()))
+                .perform(scrollTo(), click());
 
-      onView(
-         allOf(withId(R.id.item_usuario_id_com_nome),
-               isDisplayed()))
-         .check(matches(withText("(1) Usuário")));
-   }
+        onView(
+                allOf(withId(R.id.item_usuario_id_com_nome),
+                        isDisplayed()))
+                .check(matches(withText("(1) Usuário")));
+    }
 
-   @After
-   public void teardown(){
-      appContext.deleteDatabase(BuildConfig.BANCO_DADOS);
-   }
+    @After
+    public void teardown() {
+        appContext.deleteDatabase(BuildConfig.BANCO_DADOS);
+    }
 }

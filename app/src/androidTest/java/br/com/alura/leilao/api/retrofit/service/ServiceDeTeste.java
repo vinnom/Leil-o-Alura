@@ -6,12 +6,12 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 
-public interface ServiceDeTeste{
+public interface ServiceDeTeste {
 
-   @POST("leilao")
-   Call<Leilao> salva(@Body String descricao);
+    @POST("leilao")
+    Call<Leilao> salva(@Body String descricao);
 
-   @GET("reset")
-   Call<Void> reseta();
+    @GET("reset")
+    Call<Void> reseta();
 
 }
