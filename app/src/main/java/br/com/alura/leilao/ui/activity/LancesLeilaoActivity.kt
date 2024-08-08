@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import br.com.alura.leilao.api.EnviadorDeLance
 import br.com.alura.leilao.api.retrofit.client.LeilaoWebClient
-import br.com.alura.leilao.database.dao.UsuarioDAO
+import br.com.alura.leilao.database.AppDatabase
 import br.com.alura.leilao.databinding.ActivityLancesLeilaoBinding
 import br.com.alura.leilao.model.Lance
 import br.com.alura.leilao.model.Leilao
@@ -16,7 +16,9 @@ class LancesLeilaoActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLancesLeilaoBinding
     private val client = LeilaoWebClient()
     private val dialogManager = AvisoDialogManager(this)
-    private lateinit var dao: UsuarioDAO
+    private val dao by lazy {
+        AppDatabase.getDatabase(this).usuarioDao()
+    }
     private lateinit var leilaoRecebido: Leilao
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,17 +33,12 @@ class LancesLeilaoActivity : AppCompatActivity() {
         val dadosRecebidos = intent
         if (dadosRecebidos.hasExtra(CHAVE_LEILAO)) {
             leilaoRecebido =
-                    dadosRecebidos.getSerializableExtra(CHAVE_LEILAO) as Leilao
-            inicializaAtributos()
+                dadosRecebidos.getSerializableExtra(CHAVE_LEILAO) as Leilao
             apresentaDados()
             configuraFab()
         } else {
             finish()
         }
-    }
-
-    private fun inicializaAtributos() {
-        dao = UsuarioDAO()
     }
 
     private fun configuraFab() {

@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.devtools.ksp)
 }
 
 android {
@@ -24,7 +25,10 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
         debug {
             buildConfigField("String", "URL_BASE", "\"http://172.24.45.122:8080/\"")
@@ -61,4 +65,10 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.gson.converter)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    implementation(libs.coroutine.core)
+    implementation(libs.coroutine.android)
+
+    ksp(libs.room.compiler)
 }

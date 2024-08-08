@@ -2,17 +2,23 @@ package br.com.alura.leilao.ui.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import br.com.alura.leilao.database.dao.UsuarioDAO
+import androidx.lifecycle.lifecycleScope
+import br.com.alura.leilao.database.AppDatabase
 import br.com.alura.leilao.databinding.ActivityListaUsuarioBinding
 import br.com.alura.leilao.model.Usuario
 import br.com.alura.leilao.ui.AtualizadorDeUsuario
 import br.com.alura.leilao.ui.dialog.NovoUsuarioDialog
 import br.com.alura.leilao.ui.recyclerview.adapter.ListaUsuarioAdapter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ListaUsuarioActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityListaUsuarioBinding
-    private lateinit var dao: UsuarioDAO
+    private val dao by lazy {
+        AppDatabase.getDatabase(this).usuarioDao()
+    }
     private lateinit var adapter: ListaUsuarioAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +32,6 @@ class ListaUsuarioActivity : AppCompatActivity() {
     }
 
     private fun inicializaAtributos() {
-        dao = UsuarioDAO()
         adapter = ListaUsuarioAdapter(this)
     }
 
@@ -38,7 +43,12 @@ class ListaUsuarioActivity : AppCompatActivity() {
 
     private fun configuraRecyclerView() {
         binding.listaUsuarioRecyclerview.adapter = adapter
-        adapter.adiciona(dao.todos())
+        lifecycleScope.launch {
+            val usuarios = withContext(Dispatchers.IO) {
+                dao.todos()
+            }
+            adapter.adiciona(usuarios)
+        }
     }
 
     private fun mostraDialogAdicionaNovoUsuario() {
@@ -46,11 +56,17 @@ class ListaUsuarioActivity : AppCompatActivity() {
             this,
             object : NovoUsuarioDialog.UsuarioCriadoListener {
                 override fun criado(usuario: Usuario) {
-                    AtualizadorDeUsuario(
-                        dao,
-                        adapter,
-                        binding.listaUsuarioRecyclerview
-                    ).salva(usuario)
+                    lifecycleScope.launch {
+                        withContext(Dispatchers.IO) {
+                            dao.salva(usuario)
+                        }
+                        AtualizadorDeUsuario(
+                            dao,
+                            adapter,
+                            binding.listaUsuarioRecyclerview,
+                            lifecycleScope
+                        ).salva(usuario)
+                    }
                 }
             }
         )
