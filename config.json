@@ -1,0 +1,7 @@
+{
+  "ExtensionConfiguration": {
+    "OutputDirectory": "/app/src/test/java/br/com/alura/leilao/",
+    "Stack": "android",
+    "Prompt": "Generate unit tests to cover all needed scenarios. Assume JUnit4, Hamcrest and Mockito libs usage. Does not generate explanations for the tests. In-code comments should not be suppressed, but it's not needed to comment all lines, try to keep it at minimum. Generate tests in kotlin."
+  }
+}

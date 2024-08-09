@@ -85,5 +85,5 @@ lint/tmp/
 # lint/reports/
 
 # servidor
-servidor/
-database/
+./servidor/
+./database/
