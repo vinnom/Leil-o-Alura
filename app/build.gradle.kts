@@ -56,6 +56,7 @@ dependencies {
     androidTestImplementation(libs.androidx.test.espresso.contrib)
 
     testImplementation(libs.junit)
+    testImplementation(libs.coroutine.test)
     testImplementation(libs.hamcrest.all)
     testImplementation(libs.mockito.core)
 
