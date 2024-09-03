@@ -10,11 +10,7 @@ import retrofit2.Response
 
 open class LeilaoWebClient {
 
-    private val service: LeilaoService
-
-    init {
-        service = RetrofitInicializador().leilaoService
-    }
+    private val service: LeilaoService = RetrofitInicializador().leilaoService
 
     fun propoe(lance: Lance, id: Long, listener: RespostaListener<Void>) {
         val call = service.propoe(id, lance)
@@ -41,7 +37,7 @@ open class LeilaoWebClient {
             }
 
             override fun onFailure(call: Call<List<Leilao>>, t: Throwable) {
-                listener.falha(t.message ?: "Unknown error")
+                listener.falha(t.message ?: "Erro desconhecido")
             }
         })
     }

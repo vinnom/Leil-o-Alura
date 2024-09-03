@@ -12,7 +12,7 @@
         tools:context=".ui.view.LancesLeilaoActivity">
 
         <ImageView
-            android:id="@+id/lances_leilao_imagem"
+            android:id="@+id/lances_leilao_imagem_frag"
             android:layout_width="0dp"
             android:layout_height="150dp"
             android:contentDescription="@string/imagem_do_leilao"
@@ -23,7 +23,7 @@
             app:srcCompat="@drawable/img_indisponivel" />
 
         <TextView
-            android:id="@+id/lances_leilao_descricao"
+            android:id="@+id/lances_leilao_descricao_frag"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -31,56 +31,55 @@
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lances_leilao_imagem"
+            app:layout_constraintTop_toBottomOf="@+id/lances_leilao_imagem_frag"
             tools:text="Descrição detalhada do produto leiloado" />
 
         <TextView
-            android:id="@+id/lances_leilao_titulo_maior_lance"
+            android:id="@+id/lances_leilao_titulo_maior_lance_frag"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:text="@string/maior_lance"
-            app:layout_constraintEnd_toEndOf="@+id/lances_leilao_descricao"
+            app:layout_constraintEnd_toEndOf="@+id/lances_leilao_descricao_frag"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lances_leilao_descricao" />
+            app:layout_constraintTop_toBottomOf="@+id/lances_leilao_descricao_frag" />
 
         <TextView
-            android:id="@+id/lances_leilao_maior_lance"
+            android:id="@+id/lances_leilao_maior_lance_frag"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="@android:color/holo_green_dark"
             android:textSize="28sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/lances_leilao_titulo_maior_lance"
+            app:layout_constraintEnd_toEndOf="@+id/lances_leilao_titulo_maior_lance_frag"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/lances_leilao_titulo_maior_lance"
-            app:layout_constraintTop_toBottomOf="@+id/lances_leilao_titulo_maior_lance"
+            app:layout_constraintStart_toStartOf="@+id/lances_leilao_titulo_maior_lance_frag"
+            app:layout_constraintTop_toBottomOf="@+id/lances_leilao_titulo_maior_lance_frag"
             tools:text="R$ 1000,00" />
 
         <TextView
-            android:id="@+id/lances_leilao_titulo_menor_lance"
+            android:id="@+id/lances_leilao_titulo_menor_lance_frag"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/menor_lance"
-            app:layout_constraintEnd_toEndOf="@+id/lances_leilao_maior_lance"
-            app:layout_constraintStart_toStartOf="@id/lances_leilao_titulo_maior_lance"
-            app:layout_constraintTop_toBottomOf="@id/lances_leilao_maior_lance" />
+            app:layout_constraintEnd_toEndOf="@+id/lances_leilao_maior_lance_frag"
+            app:layout_constraintStart_toStartOf="@id/lances_leilao_titulo_maior_lance_frag"
+            app:layout_constraintTop_toBottomOf="@id/lances_leilao_maior_lance_frag" />
 
         <TextView
-            android:id="@+id/lances_leilao_menor_lance"
+            android:id="@+id/lances_leilao_menor_lance_frag"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="@android:color/holo_red_dark"
             android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="@id/lances_leilao_titulo_menor_lance"
-            app:layout_constraintStart_toStartOf="@id/lances_leilao_titulo_menor_lance"
-            app:layout_constraintTop_toBottomOf="@id/lances_leilao_titulo_menor_lance"
+            app:layout_constraintEnd_toEndOf="@id/lances_leilao_titulo_menor_lance_frag"
+            app:layout_constraintStart_toStartOf="@id/lances_leilao_titulo_menor_lance_frag"
+            app:layout_constraintTop_toBottomOf="@id/lances_leilao_titulo_menor_lance_frag"
             tools:text="R$ 200,00" />
 
         <TextView
-            android:id="@+id/lances_leilao_titulo_maiores"
+            android:id="@+id/lances_leilao_titulo_maiores_frag"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -91,21 +90,21 @@
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lances_leilao_menor_lance" />
+            app:layout_constraintTop_toBottomOf="@+id/lances_leilao_menor_lance_frag" />
 
         <TextView
-            android:id="@+id/lances_leilao_maiores_lances"
+            android:id="@+id/lances_leilao_maiores_lances_frag"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="@id/lances_leilao_titulo_maiores"
-            app:layout_constraintStart_toStartOf="@id/lances_leilao_titulo_maiores"
-            app:layout_constraintTop_toBottomOf="@id/lances_leilao_titulo_maiores"
+            app:layout_constraintEnd_toEndOf="@id/lances_leilao_titulo_maiores_frag"
+            app:layout_constraintStart_toStartOf="@id/lances_leilao_titulo_maiores_frag"
+            app:layout_constraintTop_toBottomOf="@id/lances_leilao_titulo_maiores_frag"
             tools:text="R$ 1000,00" />
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/lances_leilao_fab_adiciona"
+            android:id="@+id/lances_leilao_fab_adiciona_frag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"

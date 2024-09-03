@@ -4,11 +4,12 @@ import br.com.alura.leilao.exception.QuantidadeMaximaDeLancesException
 import br.com.alura.leilao.exception.UsuarioDeuLancesSeguidosException
 import br.com.alura.leilao.exception.ValorMenorQueOAnteriorException
 import java.io.Serializable
+import kotlin.jvm.Throws
 
 data class Leilao(
     val id: Long = 0L,
     val descricao: String,
-    val lances: MutableList<Lance> = mutableListOf(Lance(Usuario(nome = ""), 0.0)),
+    val lances: MutableList<Lance> = mutableListOf(),
 ) : Serializable {
 
     init {
@@ -16,6 +17,23 @@ data class Leilao(
             lances.add(Lance(Usuario(nome = ""), 0.0))
         }
     }
+
+    val maiorLanceFormatado: String
+        get() {
+            return getMaiorLance().valorFormatado
+        }
+    val menorLanceFormatado: String
+        get() {
+            return getMenorLance().valorFormatado
+        }
+    val tresMaioresLances: List<Lance>
+        get() {
+            return when {
+                lances.isEmpty() -> lances
+                lances.size < 3 -> lances.subList(0, lances.size)
+                else -> lances.subList(0, 3)
+            }
+        }
 
     fun propoe(lance: Lance) {
         if (lances[0].valor == 0.0) {
@@ -51,27 +69,13 @@ data class Leilao(
         }
     }
 
-    fun getMaiorLance(): Lance {
+    private fun getMaiorLance(): Lance {
         return lances[0]
     }
 
-    fun getMaiorLanceFormatado(): String {
-        return getMaiorLance().valorFormatado
-    }
-
-    fun getMenorLance(): Lance {
+    private fun getMenorLance(): Lance {
         return lances[lances.size - 1]
     }
 
-    fun getMenorLanceFormatado(): String {
-        return getMenorLance().valorFormatado
-    }
 
-    fun getTresMaioresLances(): List<Lance> {
-        return when {
-            lances.isEmpty() -> lances
-            lances.size < 3 -> lances.subList(0, lances.size)
-            else -> lances.subList(0, 3)
-        }
-    }
 }

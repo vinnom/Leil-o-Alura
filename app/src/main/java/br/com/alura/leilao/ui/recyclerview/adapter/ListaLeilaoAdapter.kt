@@ -12,7 +12,7 @@ import br.com.alura.leilao.model.Leilao
 class ListaLeilaoAdapter(private val context: Context) :
     RecyclerView.Adapter<ListaLeilaoAdapter.ViewHolder>() {
 
-    private val leiloes: MutableList<Leilao> = ArrayList()
+    private val leiloes = mutableListOf<Leilao>()
     private var onItemClickListener: OnItemClickListener? = null
 
     fun setOnItemClickListener(onItemClickListener: OnItemClickListener) {
@@ -20,13 +20,16 @@ class ListaLeilaoAdapter(private val context: Context) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val viewCriada = LayoutInflater.from(context).inflate(R.layout.item_leilao, parent, false)
+        val viewCriada = createView(parent)
         return ViewHolder(viewCriada)
     }
 
+    private fun createView(parent: ViewGroup): View {
+        return LayoutInflater.from(context).inflate(R.layout.item_leilao, parent, false)
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val leilao = pegaLeilaoPorPosicao(position)
-        holder.vincula(leilao)
+        holder.bind(leiloes[position])
     }
 
     override fun getItemCount(): Int {
@@ -35,18 +38,8 @@ class ListaLeilaoAdapter(private val context: Context) :
 
     fun atualiza(leiloes: List<Leilao>?) {
         this.leiloes.clear()
-        if (leiloes != null) {
-            this.leiloes.addAll(leiloes)
-        }
-        notificaMudancaNoConjuntoDeDados()
-    }
-
-    private fun notificaMudancaNoConjuntoDeDados() {
+        leiloes?.let { this.leiloes.addAll(it) }
         notifyDataSetChanged()
-    }
-
-    private fun pegaLeilaoPorPosicao(posicao: Int): Leilao {
-        return leiloes[posicao]
     }
 
     interface OnItemClickListener {
@@ -65,10 +58,14 @@ class ListaLeilaoAdapter(private val context: Context) :
             }
         }
 
-        fun vincula(leilao: Leilao) {
+        fun bind(leilao: Leilao) {
             this.leilao = leilao
+            setLeilaoDetails(leilao)
+        }
+
+        private fun setLeilaoDetails(leilao: Leilao) {
             descricao.text = leilao.descricao
-            maiorLance.text = leilao.getMaiorLanceFormatado()
+            maiorLance.text = leilao.maiorLanceFormatado
         }
     }
 }

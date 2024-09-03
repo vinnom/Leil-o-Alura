@@ -12,7 +12,7 @@ import br.com.alura.leilao.model.Usuario
 class ListaUsuarioAdapter(private val context: Context) :
     RecyclerView.Adapter<ListaUsuarioAdapter.ViewHolder>() {
 
-    private val usuarios: MutableList<Usuario> = ArrayList()
+    private val usuarios = mutableListOf<Usuario>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val viewCriada = LayoutInflater.from(context).inflate(R.layout.item_usuario, parent, false)

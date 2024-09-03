@@ -1,112 +1,69 @@
 package br.com.alura.leilao.ui.dialog
 
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
-import android.view.LayoutInflater
-import android.view.View
+import android.os.Bundle
 import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.Spinner
 import androidx.appcompat.app.AlertDialog
-import br.com.alura.leilao.R
-import br.com.alura.leilao.database.dao.UsuarioDAO
+import androidx.fragment.app.DialogFragment
+import br.com.alura.leilao.databinding.FormLanceBinding
 import br.com.alura.leilao.model.Lance
 import br.com.alura.leilao.model.Usuario
-import br.com.alura.leilao.ui.activity.ListaUsuarioActivity
-import com.google.android.material.textfield.TextInputLayout
+import br.com.alura.leilao.ui.view.ListaUsuarioFragment
 
 class NovoLanceDialog(
-    private val context: Context,
-    private val listener: LanceCriadoListener,
-    private val dao: UsuarioDAO,
-    private val dialogManager: AvisoDialogManager
-) {
+    private val containerId: Int,
+    private val usuarios: List<Usuario>,
+    private val lanceCriadoListener: LanceCriadoListener,
+) : DialogFragment() {
 
-    companion object {
-        private const val TITULO = "Novo lance"
-        private const val DESCRICAO_BOTAO_POSITIVO = "Propor"
-        private const val DESCRICAO_BOTAO_NEGATIVO = "Cancelar"
-        private const val USUARIOS_NAO_ENCONTRADOS = "Usuários não encontrados"
-        private const val MENSAGEM_NAO_EXISTE_USUARIOS_CADASTRADOS =
-            "Não existe usuários cadastrados! Cadastre um usuário para propor o lance."
-        private const val CADASTRAR_USUARIO = "Cadastrar usuário"
+    private val formLanceBinding by lazy { FormLanceBinding.inflate(layoutInflater) }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?) = when {
+        usuarios.isEmpty() -> criaSemUsuariosCadastradosDialog()
+        else -> criaNovoLanceDialog(usuarios)
     }
 
-    fun mostra() {
-        val usuarios = dao.todos()
-        if (naoTemUsuariosCadastrados(usuarios)) return
-        configuraView(usuarios)
-    }
+    private fun criaNovoLanceDialog(usuarios: List<Usuario>) =
+        AlertDialog.Builder(requireContext()).apply {
+            formLanceBinding.formLanceUsuario.adapter =
+                ArrayAdapter(
+                    requireContext(),
+                    android.R.layout.simple_spinner_dropdown_item,
+                    usuarios
+                )
+            setTitle("Novo lance")
+            setView(formLanceBinding.root)
+            setPositiveButton("Propor") { _, _ ->
+                val itemSelecionado = formLanceBinding.formLanceUsuario.selectedItem
+                val valorEmTexto = formLanceBinding.formLanceValor.editText?.text.toString()
+                try {
+                    Lance(
+                        itemSelecionado as Usuario,
+                        valorEmTexto.toDouble()
+                    ).let { lance ->
+                        lanceCriadoListener.lanceCriado(lance)
+                    }
+                } catch (_: NumberFormatException) {
+                    setTitle("")
+                    setView(null)
+                    setMessage("Valor inválido")
+                    setPositiveButton("Ok", null)
+                }
+            }
+            setNegativeButton("Cancelar", null)
+        }.create()
 
-    private fun naoTemUsuariosCadastrados(usuarios: List<Usuario>): Boolean {
-        if (usuarios.isEmpty()) {
-            mostraDialogUsuarioNaoCadastrado()
-            return true
-        }
-        return false
-    }
-
-    private fun mostraDialogUsuarioNaoCadastrado() {
-        AlertDialog.Builder(context)
-            .setTitle(USUARIOS_NAO_ENCONTRADOS)
-            .setMessage(MENSAGEM_NAO_EXISTE_USUARIOS_CADASTRADOS)
-            .setPositiveButton(CADASTRAR_USUARIO) { _, _ ->
-                val vaiParaListaDeUsuarios = Intent(context, ListaUsuarioActivity::class.java)
-                context.startActivity(vaiParaListaDeUsuarios)
-            }.show()
-    }
-
-    private fun configuraView(usuarios: List<Usuario>) {
-        val viewCriada = LayoutInflater.from(context)
-            .inflate(R.layout.form_lance, null, false)
-
-        val campoUsuarios: Spinner = viewCriada.findViewById(R.id.form_lance_usuario)
-        val textInputValor: TextInputLayout = viewCriada.findViewById(R.id.form_lance_valor)
-
-        configuraSpinnerUsuarios(usuarios, campoUsuarios)
-        val campoValor: EditText? = textInputValor.editText
-        mostraDialogPropoeLance(viewCriada, campoUsuarios, campoValor)
-    }
-
-    private fun mostraDialogPropoeLance(
-        viewCriada: View, campoUsuarios: Spinner, campoValor: EditText?
-    ) {
-        AlertDialog.Builder(context)
-            .setTitle(TITULO)
-            .setView(viewCriada)
-            .setPositiveButton(
-                DESCRICAO_BOTAO_POSITIVO,
-                criaNovoLanceListener(campoValor, campoUsuarios)
-            )
-            .setNegativeButton(DESCRICAO_BOTAO_NEGATIVO, null)
-            .show()
-    }
-
-    private fun criaNovoLanceListener(
-        campoValor: EditText?, campoUsuarios: Spinner
-    ): DialogInterface.OnClickListener {
-        return DialogInterface.OnClickListener { _, _ ->
-            val valorEmTexto = campoValor?.text.toString()
-            val usuario = campoUsuarios.selectedItem as Usuario
-            try {
-                val valor = valorEmTexto.toDouble()
-                val novoLance = Lance(usuario, valor)
-                listener.lanceCriado(novoLance)
-            } catch (e: NumberFormatException) {
-                dialogManager.mostraAvisoValorInvalido()
+    private fun criaSemUsuariosCadastradosDialog() = AlertDialog.Builder(requireContext()).apply {
+        setTitle("Usuários não encontrados")
+        setMessage("Não existe usuários cadastrados! Cadastre um usuário para propor o lance.")
+        setPositiveButton("Cadastrar usuário") { _, _ ->
+            parentFragmentManager.run {
+                beginTransaction().run {
+                    replace(containerId, ListaUsuarioFragment(), "ListaUsuario")
+                    commit()
+                }
             }
         }
-    }
-
-    private fun configuraSpinnerUsuarios(usuarios: List<Usuario>, usuariosDisponiveis: Spinner) {
-        val adapter = ArrayAdapter(
-            context,
-            android.R.layout.simple_spinner_dropdown_item,
-            usuarios
-        )
-        usuariosDisponiveis.adapter = adapter
-    }
+    }.create()
 
     interface LanceCriadoListener {
         fun lanceCriado(lance: Lance)
