@@ -56,17 +56,13 @@ class ListaUsuarioActivity : AppCompatActivity() {
             this,
             object : NovoUsuarioDialog.UsuarioCriadoListener {
                 override fun criado(usuario: Usuario) {
-                    lifecycleScope.launch {
-                        withContext(Dispatchers.IO) {
-                            dao.salva(usuario)
-                        }
-                        AtualizadorDeUsuario(
-                            dao,
-                            adapter,
-                            binding.listaUsuarioRecyclerview,
-                            lifecycleScope
-                        ).salva(usuario)
-                    }
+                    AtualizadorDeUsuario(
+                        dao,
+                        adapter,
+                        binding.listaUsuarioRecyclerview,
+                        lifecycleScope
+                    ).salva(usuario)
+
                 }
             }
         )

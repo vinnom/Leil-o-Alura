@@ -31,12 +31,12 @@ android {
             )
         }
         debug {
-            buildConfigField("String", "URL_BASE", "\"http://172.24.45.122:8080/\"")
+            buildConfigField("String", "URL_BASE", "\"http://192.168.0.42:8080/\"")
             buildConfigField("String", "BANCO_DADOS", "\"leilao-db\"")
         }
         create("simulado") {
             initWith(getByName("debug"))
-            buildConfigField("String", "URL_BASE", "\"http://172.24.45.122:8081/\"")
+            buildConfigField("String", "URL_BASE", "\"http://192.168.0.42:8081/\"")
             buildConfigField("String", "BANCO_DADOS", "\"leilao-teste-db\"")
         }
     }
@@ -48,6 +48,9 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.lifecycle.runtime.android)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.constraintlayout)
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.rules)
