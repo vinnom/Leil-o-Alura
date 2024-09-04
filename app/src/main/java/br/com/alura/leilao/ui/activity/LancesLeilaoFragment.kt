@@ -1,4 +1,4 @@
-package br.com.alura.leilao.ui
+package br.com.alura.leilao.ui.activity
 
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import br.com.alura.leilao.api.retrofit.client.LeilaoWebClient
 import br.com.alura.leilao.databinding.FragmentLancesLeilaoBinding
 import br.com.alura.leilao.model.Leilao
-import br.com.alura.leilao.ui.activity.CHAVE_LEILAO
 import br.com.alura.leilao.ui.dialog.AvisoDialogManager
 
 class LancesLeilaoFragment : Fragment() {

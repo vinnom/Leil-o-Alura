@@ -13,7 +13,6 @@ import br.com.alura.leilao.R
 import br.com.alura.leilao.database.dao.UsuarioDAO
 import br.com.alura.leilao.model.Lance
 import br.com.alura.leilao.model.Usuario
-import br.com.alura.leilao.ui.activity.ListaUsuarioActivity
 import com.google.android.material.textfield.TextInputLayout
 
 class NovoLanceDialog(
@@ -37,6 +36,7 @@ class NovoLanceDialog(
         val usuarios = dao.todos()
         if (naoTemUsuariosCadastrados(usuarios)) return
         configuraView(usuarios)
+
     }
 
     private fun naoTemUsuariosCadastrados(usuarios: List<Usuario>): Boolean {
@@ -52,8 +52,8 @@ class NovoLanceDialog(
             .setTitle(USUARIOS_NAO_ENCONTRADOS)
             .setMessage(MENSAGEM_NAO_EXISTE_USUARIOS_CADASTRADOS)
             .setPositiveButton(CADASTRAR_USUARIO) { _, _ ->
-                val vaiParaListaDeUsuarios = Intent(context, ListaUsuarioActivity::class.java)
-                context.startActivity(vaiParaListaDeUsuarios)
+//                val vaiParaListaDeUsuarios = Intent(context, ListaUsuarioActivity::class.java)
+//                context.startActivity(vaiParaListaDeUsuarios)
             }.show()
     }
 

@@ -2,7 +2,7 @@ package br.com.alura.leilao.dataholder
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import br.com.alura.leilao.ListaLeiloesRepository
+import br.com.alura.leilao.repository.ListaLeiloesRepository
 import br.com.alura.leilao.api.retrofit.client.LeilaoWebClient
 import br.com.alura.leilao.api.retrofit.client.RespostaListener
 import br.com.alura.leilao.model.Leilao

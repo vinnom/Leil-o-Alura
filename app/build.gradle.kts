@@ -1,27 +1,35 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.devtools.ksp)
 }
 
+val properties = Properties()
+properties.load(FileInputStream(file("project.properties")))
+
 android {
-    namespace = "br.com.alura.leilao"
-    compileSdk = 34
+    namespace = properties.getProperty("namespace")
+    compileSdk = properties.getProperty("compileSdk").toInt()
+
     defaultConfig {
-        applicationId = "br.com.alura.leilao"
-        minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        applicationId = properties.getProperty("namespace")
+        minSdk = properties.getProperty("minSdk").toInt()
+        targetSdk = properties.getProperty("targetSdk").toInt()
+        versionCode = properties.getProperty("versionCode").toInt()
+        versionName = properties.getProperty("versionName")
+        testInstrumentationRunner = properties.getProperty("testInstrumentationRunner")
     }
 
-    testBuildType = "simulado"
+    testBuildType = properties.getProperty("testBuildType")
 
     buildFeatures {
         viewBinding = true
         buildConfig = true
     }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -31,13 +39,29 @@ android {
             )
         }
         debug {
-            buildConfigField("String", "URL_BASE", "\"http://192.168.0.42:8080/\"")
-            buildConfigField("String", "BANCO_DADOS", "\"leilao-db\"")
+            buildConfigField(
+                "String",
+                "URL_BASE",
+                "\"${properties.getProperty("debug.URL_BASE")}\""
+            )
+            buildConfigField(
+                "String",
+                "BANCO_DADOS",
+                "\"${properties.getProperty("debug.BANCO_DADOS")}\""
+            )
         }
         create("simulado") {
             initWith(getByName("debug"))
-            buildConfigField("String", "URL_BASE", "\"http://192.168.0.42:8081/\"")
-            buildConfigField("String", "BANCO_DADOS", "\"leilao-teste-db\"")
+            buildConfigField(
+                "String",
+                "URL_BASE",
+                "\"${properties.getProperty("simulado.URL_BASE")}\""
+            )
+            buildConfigField(
+                "String",
+                "BANCO_DADOS",
+                "\"${properties.getProperty("simulado.BANCO_DADOS")}\""
+            )
         }
     }
 

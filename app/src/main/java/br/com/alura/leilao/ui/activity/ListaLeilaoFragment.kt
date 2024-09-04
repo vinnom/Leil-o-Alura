@@ -1,4 +1,4 @@
-package br.com.alura.leilao.ui
+package br.com.alura.leilao.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -14,17 +14,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import br.com.alura.leilao.LeilaoAluraApp
 import br.com.alura.leilao.R
 import br.com.alura.leilao.databinding.FragmentListaLeilaoBinding
 import br.com.alura.leilao.dataholder.ListaLeilaoDataholder
 import br.com.alura.leilao.dataholder.ListaLeilaoDataholder.Factory
 import br.com.alura.leilao.model.Leilao
-import br.com.alura.leilao.ui.activity.CHAVE_LEILAO
-import br.com.alura.leilao.ui.activity.ListaUsuarioActivity
 import br.com.alura.leilao.ui.recyclerview.adapter.ListaLeilaoAdapter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -34,7 +31,7 @@ class ListaLeilaoFragment : Fragment(), MenuProvider {
     private val binding get() = _binding!!
     private val listaAdapter by lazy { ListaLeilaoAdapter(requireContext()) }
     private val listaLeilaoDataholder by lazy {
-        val appContainer = (requireContext().applicationContext as LeilaoAluraApp).appContainer
+        val appContainer by lazy { (requireContext().applicationContext as LeilaoAluraApp).appContainer }
         val factory = Factory(appContainer.ioScope, appContainer.webClient)
         ViewModelProvider(this, factory)[ListaLeilaoDataholder::class.java]
     }
@@ -94,7 +91,7 @@ class ListaLeilaoFragment : Fragment(), MenuProvider {
             }
         )
 
-        CoroutineScope(Dispatchers.Main).launch {
+        lifecycleScope.launch {
             listaLeilaoDataholder.leiloes.collectLatest { leiloes ->
                 listaAdapter.atualiza(leiloes)
             }

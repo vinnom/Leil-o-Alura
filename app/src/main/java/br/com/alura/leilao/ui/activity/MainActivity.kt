@@ -1,4 +1,4 @@
-package br.com.alura.leilao.ui
+package br.com.alura.leilao.ui.activity
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

@@ -5,5 +5,5 @@ import br.com.alura.leilao.di.AppContainer
 
 class LeilaoAluraApp : Application() {
 
-    val appContainer by lazy { AppContainer() }
+    val appContainer by lazy { AppContainer(context = this) }
 }
