@@ -8,26 +8,24 @@ import br.com.alura.leilao.databinding.FormUsuarioBinding
 import br.com.alura.leilao.model.Usuario
 
 class NovoUsuarioDialog(
-    private val listener: UsuarioCriadoListener
+    private val listener: UsuarioCriadoListener,
 ) : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return activity?.let { activity ->
-            AlertDialog.Builder(activity).apply {
-                val binding = FormUsuarioBinding.inflate(activity.layoutInflater)
-                val campoNome = binding.formUsuarioNome.editText
+        return AlertDialog.Builder(requireContext()).apply {
+            val binding = FormUsuarioBinding.inflate(layoutInflater)
+            val campoNome = binding.formUsuarioNome.editText
 
-                setTitle("Novo usuário")
-                setView(binding.root)
-                setPositiveButton("Adicionar") { dialog, which ->
-                    listener.criado(Usuario(nome = campoNome?.text.toString()))
-                }
-            }.create()
-        } ?: throw IllegalArgumentException("Activity cannot be null")
+            setTitle("Novo usuário")
+            setView(binding.root)
+            setPositiveButton("Adicionar") { _, _ ->
+                listener.criado(Usuario(nome = campoNome?.text.toString()))
+            }
+        }.create()
     }
 
-    interface UsuarioCriadoListener{
+    interface UsuarioCriadoListener {
         fun criado(usuario: Usuario)
     }
-
 }
+

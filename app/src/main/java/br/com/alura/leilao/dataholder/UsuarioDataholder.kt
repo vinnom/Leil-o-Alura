@@ -7,27 +7,21 @@ import br.com.alura.leilao.model.Usuario
 import br.com.alura.leilao.repository.UsuarioRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
-class ListaUsuarioDataholder(
+class UsuarioDataholder(
     private val ioScope: CoroutineScope,
-    dao: UsuarioDAO
+    dao: UsuarioDAO,
 ) : ViewModel() {
 
     private val repository = UsuarioRepository(dao)
-    private val _usuarios = MutableStateFlow(listOf<Usuario>())
-    val usuarios = _usuarios.asStateFlow()
 
-    fun todos() = ioScope.launch { _usuarios.emit(repository.todos()) }
+    suspend fun todos() = ioScope.async { repository.todos() }.await()
     suspend fun buscaPorId(id: Long) = ioScope.async { repository.buscaPorId(id) }.await()
     suspend fun salva(usuario: Usuario) = ioScope.async { repository.salva(usuario) }.await()
 
-
     class Factory(
         private val ioScope: CoroutineScope,
-        private val dao: UsuarioDAO
+        private val dao: UsuarioDAO,
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return modelClass.getConstructor(CoroutineScope::class.java, UsuarioDAO::class.java)

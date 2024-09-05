@@ -9,12 +9,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import br.com.alura.leilao.LeilaoAluraApp
 import br.com.alura.leilao.databinding.FragmentListaUsuarioBinding
-import br.com.alura.leilao.dataholder.ListaUsuarioDataholder
-import br.com.alura.leilao.dataholder.ListaUsuarioDataholder.Factory
+import br.com.alura.leilao.dataholder.UsuarioDataholder
+import br.com.alura.leilao.dataholder.UsuarioDataholder.Factory
 import br.com.alura.leilao.model.Usuario
 import br.com.alura.leilao.ui.dialog.NovoUsuarioDialog
 import br.com.alura.leilao.ui.recyclerview.adapter.ListaUsuarioAdapter
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class ListaUsuarioFragment : Fragment() {
@@ -22,16 +21,16 @@ class ListaUsuarioFragment : Fragment() {
     private var _binding: FragmentListaUsuarioBinding? = null
     private val binding = _binding!!
     private val listaAdapter by lazy { ListaUsuarioAdapter(requireContext()) }
-    private val listaUsuarioDataholder by lazy {
+    private val usuarioDataholder by lazy {
         val appContainer by lazy { (requireContext().applicationContext as LeilaoAluraApp).appContainer }
         val factory = Factory(appContainer.ioScope, appContainer.roomDao)
-        ViewModelProvider(this, factory)[ListaUsuarioDataholder::class.java]
+        ViewModelProvider(this, factory)[UsuarioDataholder::class.java]
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ) = run {
         _binding = FragmentListaUsuarioBinding.inflate(inflater, container, false)
         binding.root
@@ -43,13 +42,12 @@ class ListaUsuarioFragment : Fragment() {
         if (isAdded && !isDetached) {
             requireActivity().actionBar?.title = "Usuários"
             binding.listaUsuarioRecicla.adapter = listaAdapter
-            listaUsuarioDataholder.todos()
             binding.listaUsuarioFabAdd.setOnClickListener {
                 NovoUsuarioDialog(
                     listener = object : NovoUsuarioDialog.UsuarioCriadoListener {
                         override fun criado(usuario: Usuario) {
                             lifecycleScope.launch {
-                                listaUsuarioDataholder.run {
+                                usuarioDataholder.run {
                                     buscaPorId(salva(usuario))?.let { usuarioSalvo ->
                                         listaAdapter.run {
                                             adiciona(usuarioSalvo)
@@ -70,9 +68,7 @@ class ListaUsuarioFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         lifecycleScope.launch {
-            listaUsuarioDataholder.usuarios.collectLatest { usuarios ->
-                listaAdapter.adiciona(usuarios)
-            }
+            listaAdapter.adiciona(usuarioDataholder.todos())
         }
     }
 

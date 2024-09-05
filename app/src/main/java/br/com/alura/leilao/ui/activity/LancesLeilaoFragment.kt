@@ -6,23 +6,33 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import br.com.alura.leilao.api.retrofit.client.LeilaoWebClient
+import androidx.lifecycle.ViewModelProvider
+import br.com.alura.leilao.LeilaoAluraApp
 import br.com.alura.leilao.databinding.FragmentLancesLeilaoBinding
+import br.com.alura.leilao.dataholder.LeilaoDataholder
+import br.com.alura.leilao.dataholder.UsuarioDataholder
+import br.com.alura.leilao.dataholder.UsuarioDataholder.Factory
 import br.com.alura.leilao.model.Leilao
-import br.com.alura.leilao.ui.dialog.AvisoDialogManager
 
 class LancesLeilaoFragment : Fragment() {
 
     private var leilaoRecebido: Leilao? = null
     private var _binding: FragmentLancesLeilaoBinding? = null
     private val binding = _binding!!
-    private val webClient by lazy { LeilaoWebClient() }
-    private val dialogManager by lazy { AvisoDialogManager(requireContext()) }
+    private val appContainer by lazy { (requireContext().applicationContext as LeilaoAluraApp).appContainer }
+    private val usuarioDataholder by lazy {
+        val factory = Factory(appContainer.ioScope, appContainer.roomDao)
+        ViewModelProvider(this, factory)[UsuarioDataholder::class.java]
+    }
+    private val leilaoDataholder by lazy {
+        val factory = LeilaoDataholder.Factory(appContainer.ioScope, appContainer.webClient)
+        ViewModelProvider(this, factory)[LeilaoDataholder::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ) = run {
         _binding = FragmentLancesLeilaoBinding.inflate(inflater, container, false)
         binding.root

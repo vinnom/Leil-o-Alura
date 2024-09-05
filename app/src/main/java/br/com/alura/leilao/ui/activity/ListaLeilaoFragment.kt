@@ -1,6 +1,5 @@
 package br.com.alura.leilao.ui.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -18,8 +17,8 @@ import androidx.lifecycle.lifecycleScope
 import br.com.alura.leilao.LeilaoAluraApp
 import br.com.alura.leilao.R
 import br.com.alura.leilao.databinding.FragmentListaLeilaoBinding
-import br.com.alura.leilao.dataholder.ListaLeilaoDataholder
-import br.com.alura.leilao.dataholder.ListaLeilaoDataholder.Factory
+import br.com.alura.leilao.dataholder.LeilaoDataholder
+import br.com.alura.leilao.dataholder.LeilaoDataholder.Factory
 import br.com.alura.leilao.model.Leilao
 import br.com.alura.leilao.ui.recyclerview.adapter.ListaLeilaoAdapter
 import kotlinx.coroutines.flow.collectLatest
@@ -30,16 +29,16 @@ class ListaLeilaoFragment : Fragment(), MenuProvider {
     private var _binding: FragmentListaLeilaoBinding? = null
     private val binding get() = _binding!!
     private val listaAdapter by lazy { ListaLeilaoAdapter(requireContext()) }
-    private val listaLeilaoDataholder by lazy {
+    private val leilaoDataholder by lazy {
         val appContainer by lazy { (requireContext().applicationContext as LeilaoAluraApp).appContainer }
         val factory = Factory(appContainer.ioScope, appContainer.webClient)
-        ViewModelProvider(this, factory)[ListaLeilaoDataholder::class.java]
+        ViewModelProvider(this, factory)[LeilaoDataholder::class.java]
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ) = run {
         _binding = FragmentListaLeilaoBinding.inflate(inflater, container, false)
         binding.root
@@ -79,8 +78,8 @@ class ListaLeilaoFragment : Fragment(), MenuProvider {
 
     override fun onResume() {
         super.onResume()
-        listaLeilaoDataholder.buscaLeiloes(
-            listener = object : ListaLeilaoDataholder.ErroCarregamentoListener {
+        leilaoDataholder.buscaLeiloes(
+            listener = object : LeilaoDataholder.ErroCarregamentoListener {
                 override fun aoFalhar(mensagem: String?) {
                     Toast.makeText(
                         requireContext(),
@@ -92,7 +91,7 @@ class ListaLeilaoFragment : Fragment(), MenuProvider {
         )
 
         lifecycleScope.launch {
-            listaLeilaoDataholder.leiloes.collectLatest { leiloes ->
+            leilaoDataholder.leiloes.collectLatest { leiloes ->
                 listaAdapter.atualiza(leiloes)
             }
         }
@@ -105,8 +104,13 @@ class ListaLeilaoFragment : Fragment(), MenuProvider {
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
             R.id.lista_leilao_menu_usuarios -> {
-                val intent = Intent(requireContext(), ListaUsuarioActivity::class.java)
-                startActivity(intent)
+                parentFragmentManager.run {
+                    beginTransaction().run {
+                        val parentId = (binding.root.parent as FragmentContainerView).id
+                        replace(parentId, ListaUsuarioFragment(), "ListaUsuario")
+                        commit()
+                    }
+                }
             }
         }
 
