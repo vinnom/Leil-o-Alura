@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.run {
             if (isStateSaved || isDestroyed) return
 
-            when(savedInstanceState) {
+            when (savedInstanceState) {
                 null -> {
                     beginTransaction().run {
                         add(binding.mainContainer.id, ListaLeilaoFragment(), "ListaLeilao")

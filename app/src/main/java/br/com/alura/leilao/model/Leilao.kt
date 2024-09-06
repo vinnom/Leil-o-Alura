@@ -4,7 +4,6 @@ import br.com.alura.leilao.exception.QuantidadeMaximaDeLancesException
 import br.com.alura.leilao.exception.UsuarioDeuLancesSeguidosException
 import br.com.alura.leilao.exception.ValorMenorQueOAnteriorException
 import java.io.Serializable
-import kotlin.jvm.Throws
 
 data class Leilao(
     val id: Long = 0L,

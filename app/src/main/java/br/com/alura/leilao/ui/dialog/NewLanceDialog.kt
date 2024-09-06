@@ -32,34 +32,34 @@ class NewLanceDialog(
     }
 
     private fun criaNovoLanceDialog(usuarios: List<Usuario>) =
-            AlertDialog.Builder(requireContext()).apply {
-                formLanceBinding.formLanceUsuario.adapter =
-                        ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_spinner_dropdown_item,
-                            usuarios
-                        )
-                setTitle("Novo lance")
-                setView(formLanceBinding.root)
-                setPositiveButton("Propor") { _, _ ->
-                    val itemSelecionado = formLanceBinding.formLanceUsuario.selectedItem
-                    val valorEmTexto = formLanceBinding.formLanceValor.editText?.text.toString()
-                    try {
-                        Lance(
-                            itemSelecionado as Usuario,
-                            valorEmTexto.toDouble()
-                        ).let { lance ->
-                            lanceCriadoListener.lanceCriado(lance)
-                        }
-                    } catch (_: NumberFormatException) {
-                        setTitle("")
-                        setView(null)
-                        setMessage("Valor inválido")
-                        setPositiveButton("Ok", null)
+        AlertDialog.Builder(requireContext()).apply {
+            formLanceBinding.formLanceUsuario.adapter =
+                ArrayAdapter(
+                    requireContext(),
+                    android.R.layout.simple_spinner_dropdown_item,
+                    usuarios
+                )
+            setTitle("Novo lance")
+            setView(formLanceBinding.root)
+            setPositiveButton("Propor") { _, _ ->
+                val itemSelecionado = formLanceBinding.formLanceUsuario.selectedItem
+                val valorEmTexto = formLanceBinding.formLanceValor.editText?.text.toString()
+                try {
+                    Lance(
+                        itemSelecionado as Usuario,
+                        valorEmTexto.toDouble()
+                    ).let { lance ->
+                        lanceCriadoListener.lanceCriado(lance)
                     }
+                } catch (_: NumberFormatException) {
+                    setTitle("")
+                    setView(null)
+                    setMessage("Valor inválido")
+                    setPositiveButton("Ok", null)
                 }
-                setNegativeButton("Cancelar", null)
-            }.create()
+            }
+            setNegativeButton("Cancelar", null)
+        }.create()
 
     private fun criaSemUsuariosCadastradosDialog() = AlertDialog.Builder(requireContext()).apply {
         setTitle("Usuários não encontrados")
