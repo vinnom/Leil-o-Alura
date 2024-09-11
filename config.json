@@ -1,14 +1,17 @@
 {
-  "ExtensionConfiguration": {
-    "OutputDirectory": "/app/src/test/java/br/com/alura/leilao",
-    "Stack": "android",
-    "testableFiles": [],
-    "FileNameExtension": [],
-    "IgnoreFiles": [],
-    "IgnoreContent": [],
-    "Topics": [
-      "generate unit tests using junit4, hamcrest and mockito.",
-      "when using assertThat method, use it from hamcrest."
-    ]
-  }
+    "ExtensionConfiguration": {
+        "OutputDirectory": "/app/src/test/java/br/com/alura/leilao",
+        "Stack": "android",
+        "testableFiles": [],
+        "FileNameExtension": [],
+        "IgnoreFiles": [],
+        "IgnoreContent": [],
+        "Topics": [
+            "generate unit tests using junit4, hamcrest and mockito using kotlin language idiomatically. ",
+            "when using assertThat method, use it from hamcrest. ",
+            "generate setup and teardown methods for the unit tests when necessary. ",
+            "use named parameters for better readability. ",
+            "don't create tests which needs to mock android sdk components."
+        ]
+    }
 }
